@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use App\Config\Database;
-use App\Services\NotificationService;
 use PDO;
 
 class ReportsController
@@ -28,12 +26,17 @@ class ReportsController
       return ['_status' => 400, 'error' => 'request_id and report_text are required'];
     }
 
-    $stmt = $this->db->prepare('SELECT assigned_guide_id FROM GuideRequests WHERE request_id = :rid');
+    $stmt = $this->db->prepare('SELECT assigned_guide_id, request_status FROM GuideRequests WHERE request_id = :rid');
     $stmt->execute(['rid' => $requestId]);
     $req = $stmt->fetch();
 
-    if (!$req || (int) $req['assigned_guide_id'] !== $guideId) {
-      return ['_status' => 403, 'error' => 'You are not assigned to this request'];
+    if (!$req) {
+      return ['_status' => 404, 'error' => 'Request not found'];
+    }
+
+    $assignedGuideId = (int) $req['assigned_guide_id'];
+    if ($assignedGuideId !== $guideId && $assignedGuideId != $guideId) {
+      return ['_status' => 403, 'error' => 'You are not assigned to this request (Guide ID: ' . $guideId . ', Assigned: ' . $assignedGuideId . ')'];
     }
 
     $stmt = $this->db->prepare('INSERT INTO Reports (request_id, guide_id, report_text, report_date) VALUES (:rid, :gid, :txt, :dt)');

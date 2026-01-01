@@ -88,8 +88,13 @@ export const visitorService = {
     return await visitorService.getMyRequests(userId);
   },
 
-  submitFeedback: async (requestId, rating, comment) => {
-    return await api.post('/reviews', { request_id: requestId, rating, comment });
+  submitFeedback: async (requestId, rating, comment, siteId) => {
+    return await api.post('/reviews', {
+      site_id: siteId,
+      visit_id: requestId,
+      rating,
+      comment
+    });
   },
 
   updateProfile: async (user) => {

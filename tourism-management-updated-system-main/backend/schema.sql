@@ -1,9 +1,8 @@
--- Drop existing tables if they exist (to avoid conflicts)
+
 DROP DATABASE IF EXISTS tourism;
 CREATE DATABASE tourism;
 USE tourism;
 
--- 1. Users Table (Main user registration)
 CREATE TABLE Users (
     user_id INT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(100) NOT NULL,
@@ -19,14 +18,14 @@ CREATE TABLE Users (
     is_active BOOLEAN DEFAULT TRUE
 );
 
--- 2. User Roles (if multiple roles per user needed)
+-
 CREATE TABLE Roles (
     role_id INT PRIMARY KEY AUTO_INCREMENT,
     role_name VARCHAR(50) UNIQUE NOT NULL,
     description TEXT
 );
 
--- 3. User-Role Mapping
+
 CREATE TABLE UserRoles (
     user_role_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
@@ -35,14 +34,14 @@ CREATE TABLE UserRoles (
     FOREIGN KEY (role_id) REFERENCES Roles(role_id) ON DELETE CASCADE
 );
 
--- 4. Categories Table
+
 CREATE TABLE Categories (
     category_id INT PRIMARY KEY AUTO_INCREMENT,
     category_name VARCHAR(50) UNIQUE NOT NULL,
     description TEXT
 );
 
--- 5. Regions Table
+
 CREATE TABLE Regions (
     region_id INT PRIMARY KEY AUTO_INCREMENT,
     region_name VARCHAR(100) NOT NULL,
@@ -50,7 +49,7 @@ CREATE TABLE Regions (
     country VARCHAR(100) DEFAULT 'Ethiopia'
 );
 
--- 6. Historical Sites Table (Core table)
+
 CREATE TABLE Sites (
     site_id INT PRIMARY KEY AUTO_INCREMENT,
     site_name VARCHAR(200) NOT NULL,
@@ -78,7 +77,6 @@ CREATE TABLE Sites (
     FOREIGN KEY (approved_by) REFERENCES Users(user_id)
 );
 
--- 7. Site Images Table
 CREATE TABLE SiteImages (
     image_id INT PRIMARY KEY AUTO_INCREMENT,
     site_id INT,
@@ -90,7 +88,7 @@ CREATE TABLE SiteImages (
     FOREIGN KEY (uploaded_by) REFERENCES Users(user_id)
 );
 
--- 8. Guide Types Table
+
 CREATE TABLE GuideTypes (
     guide_type_id INT PRIMARY KEY AUTO_INCREMENT,
     type_name VARCHAR(50) NOT NULL,
@@ -98,7 +96,7 @@ CREATE TABLE GuideTypes (
     additional_fee DECIMAL(10, 2) DEFAULT 0
 );
 
--- 9. Guide Requests Table (Visitor's booking)
+
 CREATE TABLE GuideRequests (
     request_id INT PRIMARY KEY AUTO_INCREMENT,
     visitor_id INT,
@@ -122,14 +120,14 @@ CREATE TABLE GuideRequests (
     FOREIGN KEY (assigned_guide_id) REFERENCES Users(user_id)
 );
 
--- 10. Payment Methods Table
+
 CREATE TABLE PaymentMethods (
     method_id INT PRIMARY KEY AUTO_INCREMENT,
     method_name VARCHAR(50) NOT NULL,
     description TEXT
 );
 
--- 11. Payments Table
+
 CREATE TABLE Payments (
     payment_id INT PRIMARY KEY AUTO_INCREMENT,
     request_id INT UNIQUE,

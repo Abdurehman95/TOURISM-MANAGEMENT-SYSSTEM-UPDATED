@@ -227,11 +227,25 @@ class RequestsController
 
     public function updateStatus(int $requestId, string $status, array $context): array
     {
-        $stmt = $this->db->prepare('UPDATE GuideRequests SET request_status = :status WHERE request_id = :id');
-        $stmt->execute([
+        $sql = 'UPDATE GuideRequests SET request_status = :status';
+        $params = [
             'status' => $status,
             'id' => $requestId,
-        ]);
+        ];
+
+        // If guide accepts, assign them to the request
+        if ($status === 'accepted_by_guide') {
+            $guideId = (int) ($context['sub'] ?? 0);
+            if ($guideId > 0) {
+                $sql .= ', assigned_guide_id = :guide_id';
+                $params['guide_id'] = $guideId;
+            }
+        }
+
+        $sql .= ' WHERE request_id = :id';
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
 
         if (in_array($status, ['accepted_by_guide', 'rejected_by_guide'])) {
             $stmt = $this->db->prepare("SELECT visitor_id FROM GuideRequests WHERE request_id = ?");
