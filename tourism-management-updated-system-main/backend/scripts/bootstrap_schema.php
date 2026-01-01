@@ -1,6 +1,4 @@
 <?php
-// Bootstrap schema safely: creates DB if missing and creates tables if they do not exist.
-// Uses current .env credentials.
 
 declare(strict_types=1);
 
@@ -19,7 +17,6 @@ $dbName = Env::get('DB_NAME', 'tourism');
 $user = Env::get('DB_USER', 'root');
 $pass = Env::get('DB_PASS', '');
 
-// Connect without DB first to create it if needed
 $dsnNoDb = sprintf('mysql:host=%s;port=%s;charset=utf8mb4', $host, $port);
 try {
     $pdoRoot = new PDO($dsnNoDb, $user, $pass, [
@@ -31,14 +28,12 @@ try {
     exit("Failed to create database: " . $e->getMessage() . "\n");
 }
 
-// Connect to target DB
 $pdo = Database::make();
 
 $exec = function (string $sql) use ($pdo) {
     $pdo->exec($sql);
 };
 
-// Users
 $exec("CREATE TABLE IF NOT EXISTS Users (
     user_id INT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(100) NOT NULL,
@@ -53,14 +48,12 @@ $exec("CREATE TABLE IF NOT EXISTS Users (
     is_active BOOLEAN DEFAULT TRUE
 );");
 
-// Roles
 $exec("CREATE TABLE IF NOT EXISTS Roles (
     role_id INT PRIMARY KEY AUTO_INCREMENT,
     role_name VARCHAR(50) UNIQUE NOT NULL,
     description TEXT
 );");
 
-// UserRoles
 $exec("CREATE TABLE IF NOT EXISTS UserRoles (
     user_role_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
@@ -69,14 +62,12 @@ $exec("CREATE TABLE IF NOT EXISTS UserRoles (
     FOREIGN KEY (role_id) REFERENCES Roles(role_id) ON DELETE CASCADE
 );");
 
-// Categories
 $exec("CREATE TABLE IF NOT EXISTS Categories (
     category_id INT PRIMARY KEY AUTO_INCREMENT,
     category_name VARCHAR(50) UNIQUE NOT NULL,
     description TEXT
 );");
 
-// Regions
 $exec("CREATE TABLE IF NOT EXISTS Regions (
     region_id INT PRIMARY KEY AUTO_INCREMENT,
     region_name VARCHAR(100) NOT NULL,
@@ -84,7 +75,6 @@ $exec("CREATE TABLE IF NOT EXISTS Regions (
     country VARCHAR(100) DEFAULT 'Ethiopia'
 );");
 
-// Sites
 $exec("CREATE TABLE IF NOT EXISTS Sites (
     site_id INT PRIMARY KEY AUTO_INCREMENT,
     site_name VARCHAR(200) NOT NULL,
@@ -115,7 +105,6 @@ $exec("CREATE TABLE IF NOT EXISTS Sites (
     FOREIGN KEY (approved_by) REFERENCES Users(user_id)
 );");
 
-// SiteImages
 $exec("CREATE TABLE IF NOT EXISTS SiteImages (
     image_id INT PRIMARY KEY AUTO_INCREMENT,
     site_id INT,
@@ -127,7 +116,6 @@ $exec("CREATE TABLE IF NOT EXISTS SiteImages (
     FOREIGN KEY (uploaded_by) REFERENCES Users(user_id)
 );");
 
-// GuideTypes
 $exec("CREATE TABLE IF NOT EXISTS GuideTypes (
     guide_type_id INT PRIMARY KEY AUTO_INCREMENT,
     type_name VARCHAR(50) NOT NULL,
@@ -135,7 +123,6 @@ $exec("CREATE TABLE IF NOT EXISTS GuideTypes (
     additional_fee DECIMAL(10, 2) DEFAULT 0
 );");
 
-// GuideRequests
 $exec("CREATE TABLE IF NOT EXISTS GuideRequests (
     request_id INT PRIMARY KEY AUTO_INCREMENT,
     visitor_id INT,
@@ -157,14 +144,12 @@ $exec("CREATE TABLE IF NOT EXISTS GuideRequests (
     FOREIGN KEY (assigned_guide_id) REFERENCES Users(user_id)
 );");
 
-// PaymentMethods
 $exec("CREATE TABLE IF NOT EXISTS PaymentMethods (
     method_id INT PRIMARY KEY AUTO_INCREMENT,
     method_name VARCHAR(50) NOT NULL,
     description TEXT
 );");
 
-// Payments
 $exec("CREATE TABLE IF NOT EXISTS Payments (
     payment_id INT PRIMARY KEY AUTO_INCREMENT,
     request_id INT UNIQUE,
@@ -181,7 +166,6 @@ $exec("CREATE TABLE IF NOT EXISTS Payments (
     FOREIGN KEY (confirmed_by) REFERENCES Users(user_id)
 );");
 
-// PaymentProofs
 $exec("CREATE TABLE IF NOT EXISTS PaymentProofs (
     proof_id INT PRIMARY KEY AUTO_INCREMENT,
     payment_id INT,
@@ -195,7 +179,6 @@ $exec("CREATE TABLE IF NOT EXISTS PaymentProofs (
     FOREIGN KEY (payment_id) REFERENCES Payments(payment_id) ON DELETE CASCADE
 );");
 
-// Visits
 $exec("CREATE TABLE IF NOT EXISTS Visits (
     visit_id INT PRIMARY KEY AUTO_INCREMENT,
     request_id INT,
@@ -210,7 +193,6 @@ $exec("CREATE TABLE IF NOT EXISTS Visits (
     FOREIGN KEY (request_id) REFERENCES GuideRequests(request_id)
 );");
 
-// SiteSubmissions
 $exec("CREATE TABLE IF NOT EXISTS SiteSubmissions (
     submission_id INT PRIMARY KEY AUTO_INCREMENT,
     researcher_id INT,
@@ -227,7 +209,6 @@ $exec("CREATE TABLE IF NOT EXISTS SiteSubmissions (
     FOREIGN KEY (reviewed_by) REFERENCES Users(user_id)
 );");
 
-// ResearcherActivities
 $exec("CREATE TABLE IF NOT EXISTS ResearcherActivities (
     activity_id INT PRIMARY KEY AUTO_INCREMENT,
     researcher_id INT,
@@ -239,7 +220,6 @@ $exec("CREATE TABLE IF NOT EXISTS ResearcherActivities (
     FOREIGN KEY (related_site_id) REFERENCES Sites(site_id)
 );");
 
-// Notifications
 $exec("CREATE TABLE IF NOT EXISTS Notifications (
     notification_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
@@ -255,7 +235,6 @@ $exec("CREATE TABLE IF NOT EXISTS Notifications (
     FOREIGN KEY (related_payment_id) REFERENCES Payments(payment_id)
 );");
 
-// Reviews
 $exec("CREATE TABLE IF NOT EXISTS Reviews (
     review_id INT PRIMARY KEY AUTO_INCREMENT,
     visitor_id INT,
@@ -270,7 +249,6 @@ $exec("CREATE TABLE IF NOT EXISTS Reviews (
     FOREIGN KEY (visit_id) REFERENCES Visits(visit_id)
 );");
 
-// SiteGuideTypes
 $exec("CREATE TABLE IF NOT EXISTS SiteGuideTypes (
     site_guide_id INT PRIMARY KEY AUTO_INCREMENT,
     site_id INT,

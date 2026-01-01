@@ -20,7 +20,7 @@ export default function AdminReports() {
   }, []);
 
   const handleExportCSV = () => {
-    // Basic CSV export
+
     let csv = 'Guide Name,Site,Visitor,Date,Report\n';
     reports.forEach(r => {
       csv += `"${r.guide_name} ${r.guide_last}","${r.site_name}","Request #${r.request_id}","${r.report_date}","${r.report_text.replace(/"/g, '""')}"\n`;
@@ -35,7 +35,7 @@ export default function AdminReports() {
   };
 
   const handleExportPDF = () => {
-    // Simple print for PDF export
+
     window.print();
   };
 
@@ -74,37 +74,50 @@ export default function AdminReports() {
           </div>
 
           <div style={{ marginTop: '30px' }}>
-            <h3>Guide Reports</h3>
-            <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
-              <button className="btn-primary" onClick={handleExportCSV}>{t('btn_export_csv')}</button>
-              <button className="btn-outline" onClick={handleExportPDF}>{t('btn_export_pdf')}</button>
+            <h3>{t('Reports Overview') || 'Detailed Reports Overview'}</h3>
+            <div className="no-print" style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+              <button className="btn-primary" onClick={handleExportCSV}>{t('Export CSV')}</button>
+              <button className="btn-outline" onClick={handleExportPDF}>{t('Export PDF')}</button>
             </div>
+
             {reports.length === 0 ? (
               <p>No reports submitted yet.</p>
             ) : (
               <div style={{ overflowX: 'auto' }}>
-                <table className="admin-table">
+                {/* <table className="table admin-table" id="reports-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Guide</th>
-                      <th>Site</th>
-                      <th>Report</th>
+                    <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
+                      <th style={{ padding: '12px', textAlign: 'left' }}>Guide</th>
+                      <th style={{ padding: '12px', textAlign: 'left' }}>Site</th>
+                      <th style={{ padding: '12px', textAlign: 'left' }}>Request ID</th>
+                      <th style={{ padding: '12px', textAlign: 'left' }}>Date</th>
+                      <th style={{ padding: '12px', textAlign: 'left' }}>Report</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {reports.map(report => (
-                      <tr key={report.report_id}>
-                        <td>{new Date(report.report_date).toLocaleDateString()}</td>
-                        <td>{report.guide_name} {report.guide_last}</td>
-                        <td>{report.site_name}</td>
-                        <td>{report.report_text}</td>
+                    {reports.map((r, i) => (
+                      <tr key={i} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                        <td style={{ padding: '12px' }}>{r.guide_name} {r.guide_last}</td>
+                        <td style={{ padding: '12px' }}>{r.site_name}</td>
+                        <td style={{ padding: '12px' }}>#{r.request_id}</td>
+                        <td style={{ padding: '12px' }}>{new Date(r.report_date).toLocaleDateString()}</td>
+                        <td style={{ padding: '12px' }}>{r.report_text}</td>
                       </tr>
                     ))}
                   </tbody>
-                </table>
+                </table> */}
               </div>
             )}
+            <style>{`
+                @media print {
+                    .admin-sidebar, .admin-main-header, .no-print { display: none !important; }
+                    .admin-layout { display: block; }
+                    .admin-main { margin: 0; padding: 0; width: 100%; }
+                    .panel { box-shadow: none; border: none; padding: 0; }
+                    body { background: white; }
+                    #reports-table th, #reports-table td { border: 1px solid #ddd !important; }
+                }
+            `}</style>
           </div>
         </section>
       </main>

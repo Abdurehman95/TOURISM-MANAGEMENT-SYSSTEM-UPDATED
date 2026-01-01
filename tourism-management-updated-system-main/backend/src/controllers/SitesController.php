@@ -22,15 +22,17 @@ class SitesController
             if (!$table) {
                 return [];
             }
-            // Join with SiteImages to get the primary image
+
             $sql = "SELECT s.*, 
                            COALESCE(si.image_url, s.image_url) as image_url,
                            reg.region_name as region,
-                           cat.category_name as category
+                           cat.category_name as category,
+                           CONCAT(u.first_name, ' ', u.last_name) as researcher_name
                     FROM `$table` s 
                     LEFT JOIN SiteImages si ON s.site_id = si.site_id AND si.is_primary = 1
                     LEFT JOIN Regions reg ON s.region_id = reg.region_id
                     LEFT JOIN Categories cat ON s.category_id = cat.category_id
+                    LEFT JOIN Users u ON s.created_by = u.user_id
                     ORDER BY s.created_at DESC";
             $stmt = $this->db->query($sql);
             $items = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
@@ -51,11 +53,13 @@ class SitesController
             $sql = "SELECT s.*, 
                            COALESCE(si.image_url, s.image_url) as image_url,
                            reg.region_name as region,
-                           cat.category_name as category
+                           cat.category_name as category,
+                           CONCAT(u.first_name, ' ', u.last_name) as researcher_name
                     FROM `$table` s 
                     LEFT JOIN SiteImages si ON s.site_id = si.site_id AND si.is_primary = 1
                     LEFT JOIN Regions reg ON s.region_id = reg.region_id
                     LEFT JOIN Categories cat ON s.category_id = cat.category_id
+                    LEFT JOIN Users u ON s.created_by = u.user_id
                     WHERE s.site_id = :id";
             $stmt = $this->db->prepare($sql);
             $stmt->execute(['id' => $id]);
@@ -75,16 +79,18 @@ class SitesController
     {
         try {
             $table = $this->resolveSitesTable();
-            $submissionTable = $this->resolveSubmissionTable();
-            if (!$table && !$submissionTable) {
+            if (!$table) {
                 return ['_status' => 500, 'error' => 'Sites table not found'];
             }
 
-            $columns = $table ? $this->siteColumns($table) : [];
+            $columns = $this->siteColumns($table);
+            if (empty($columns)) {
+                $columns = ['site_name', 'description', 'full_description', 'short_description', 'location', 'location_address', 'price', 'visit_price', 'visit_duration', 'estimated_duration', 'image_url', 'map_url', 'nearby_attractions', 'category_id', 'region_id', 'is_approved', 'status', 'created_by'];
+            }
 
             $defaults = [
-                'is_approved' => false,
-                'status' => 'pending',
+                'is_approved' => 1,
+                'status' => 'approved',
                 'created_by' => $context['sub'] ?? null,
                 'researcher_id' => $context['sub'] ?? null,
             ];
@@ -102,14 +108,13 @@ class SitesController
                 'visit_price' => ['visit_price', 'price'],
                 'entrance_fee' => ['entrance_fee'],
                 'guide_fee' => ['guide_fee'],
-                'category' => ['category'], // Don't map to category_id directly if it's a name
                 'category_id' => ['category_id'],
-                'region' => ['region'], // Don't map to region_id directly if it's a name
                 'region_id' => ['region_id'],
                 'visit_duration' => ['visit_duration', 'estimated_duration'],
                 'nearby_attractions' => ['nearby_attractions'],
                 'map_url' => ['map_url'],
                 'image' => ['image', 'image_url'],
+                'image_url' => ['image_url', 'image'],
                 'is_approved' => ['is_approved'],
                 'status' => ['status'],
                 'created_by' => ['created_by'],
@@ -118,7 +123,8 @@ class SitesController
 
             $data = [];
             foreach ($map as $inputKey => $columnOptions) {
-                if (!array_key_exists($inputKey, $input)) {
+
+                if (!isset($input[$inputKey]) && !array_key_exists($inputKey, $input)) {
                     continue;
                 }
                 $val = $input[$inputKey];
@@ -130,7 +136,6 @@ class SitesController
                 }
             }
 
-            // Derive extra fields when columns exist but specific inputs were mapped differently
             if (!isset($data['full_description']) && !empty($input['description']) && in_array('full_description', $columns, true)) {
                 $data['full_description'] = $input['description'];
             }
@@ -150,7 +155,6 @@ class SitesController
                 $data['visit_price'] = $input['price'];
             }
 
-            // apply defaults for missing
             foreach ($defaults as $col => $val) {
                 if (in_array($col, $columns, true) && !array_key_exists($col, $data)) {
                     $data[$col] = $val;
@@ -158,109 +162,87 @@ class SitesController
             }
 
             if (empty($data)) {
-                // No valid fields
+                return ['_status' => 400, 'error' => 'No valid fields to insert. Check database schema.'];
             }
 
-            if ($table && !empty($data)) {
-                $columnsSql = implode(', ', array_map(fn($c) => "`$c`", array_keys($data)));
-                $placeholders = implode(', ', array_map(static fn($c) => ':' . $c, array_keys($data)));
-                $sql = sprintf('INSERT INTO `%s` (%s) VALUES (%s)', $table, $columnsSql, $placeholders);
+            $columnsSql = implode(', ', array_map(fn($c) => "`$c`", array_keys($data)));
+            $placeholders = implode(', ', array_map(static fn($c) => ':' . $c, array_keys($data)));
+            $sql = sprintf('INSERT INTO `%s` (%s) VALUES (%s)', $table, $columnsSql, $placeholders);
 
-                $stmt = $this->db->prepare($sql);
-                $stmt->execute($data);
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute($data);
 
-                $id = (int) $this->db->lastInsertId();
+            $id = (int) $this->db->lastInsertId();
 
-                // --- Populate Normalized Tables (Categories, Regions, SiteImages) ---
-                try {
-                    // 1. Categories
-                    if (!empty($input['category'])) {
-                        $catName = trim($input['category']);
-                        $stmt = $this->db->prepare("SELECT category_id FROM Categories WHERE category_name = ?");
+            try {
+
+                if (!empty($input['category'])) {
+                    $catName = trim($input['category']);
+                    $stmt = $this->db->prepare("SELECT category_id FROM Categories WHERE category_name = ?");
+                    $stmt->execute([$catName]);
+                    $catId = $stmt->fetchColumn();
+                    if (!$catId) {
+                        $stmt = $this->db->prepare("INSERT INTO Categories (category_name) VALUES (?)");
                         $stmt->execute([$catName]);
-                        $catId = $stmt->fetchColumn();
-                        if (!$catId) {
-                            $stmt = $this->db->prepare("INSERT INTO Categories (category_name) VALUES (?)");
-                            $stmt->execute([$catName]);
-                            $catId = $this->db->lastInsertId();
-                        }
-                        if ($catId) {
-                            $this->db->prepare("UPDATE `$table` SET category_id = ? WHERE site_id = ?")->execute([$catId, $id]);
-                        }
+                        $catId = $this->db->lastInsertId();
                     }
+                    if ($catId && in_array('category_id', $columns, true)) {
+                        $this->db->prepare("UPDATE `$table` SET category_id = ? WHERE site_id = ?")->execute([$catId, $id]);
+                    }
+                }
 
-                    // 2. Regions
-                    if (!empty($input['region'])) {
-                        $regName = trim($input['region']);
-                        $stmt = $this->db->prepare("SELECT region_id FROM Regions WHERE region_name = ?");
+                if (!empty($input['region'])) {
+                    $regName = trim($input['region']);
+                    $stmt = $this->db->prepare("SELECT region_id FROM Regions WHERE region_name = ?");
+                    $stmt->execute([$regName]);
+                    $regId = $stmt->fetchColumn();
+                    if (!$regId) {
+                        $stmt = $this->db->prepare("INSERT INTO Regions (region_name) VALUES (?)");
                         $stmt->execute([$regName]);
-                        $regId = $stmt->fetchColumn();
-                        if (!$regId) {
-                            $stmt = $this->db->prepare("INSERT INTO Regions (region_name) VALUES (?)");
-                            $stmt->execute([$regName]);
-                            $regId = $this->db->lastInsertId();
-                        }
-                        if ($regId) {
-                            $this->db->prepare("UPDATE `$table` SET region_id = ? WHERE site_id = ?")->execute([$regId, $id]);
-                        }
+                        $regId = $this->db->lastInsertId();
                     }
-
-                    // 3. SiteImages
-                    if (!empty($input['image'])) {
-                        $imgUrl = trim($input['image']);
-                        $stmt = $this->db->prepare("INSERT INTO SiteImages (site_id, image_url, is_primary, uploaded_by) VALUES (?, ?, 1, ?)");
-                        $stmt->execute([$id, $imgUrl, $context['sub'] ?? null]);
+                    if ($regId && in_array('region_id', $columns, true)) {
+                        $this->db->prepare("UPDATE `$table` SET region_id = ? WHERE site_id = ?")->execute([$regId, $id]);
                     }
-
-                } catch (Throwable $e) {
-                    file_put_contents(__DIR__ . '/../../debug_sites_store.log', date('[Y-m-d H:i:s] ') . "Normalization Error: " . $e->getMessage() . "\n", FILE_APPEND);
-                    // Ignore errors here to ensure the main site creation succeeds
                 }
 
-                // --- Log Researcher Activity ---
-                try {
-                    $stmt = $this->db->prepare(
-                        "INSERT INTO ResearcherActivities (researcher_id, activity_type, description, related_site_id) 
-                         VALUES (:uid, 'add_site', :desc, :sid)"
-                    );
-                    $stmt->execute([
-                        'uid' => $context['sub'] ?? null,
-                        'desc' => "Added new site: " . ($data['site_name'] ?? 'Unknown'),
-                        'sid' => $id
-                    ]);
-                } catch (Throwable $e) {
-                    // ignore logging errors
+                if (!empty($input['image'])) {
+                    $imgUrl = trim($input['image']);
+                    $stmt = $this->db->prepare("INSERT INTO SiteImages (site_id, image_url, is_primary, uploaded_by) VALUES (?, ?, 1, ?)");
+                    $stmt->execute([$id, $imgUrl, $context['sub'] ?? null]);
                 }
-                // -------------------------------------------------------------------
 
-                $this->notifications->notifyAdmins(
-                    'New Site Submitted',
-                    "A new site '" . ($data['site_name'] ?? 'Unknown') . "' has been submitted by a researcher.",
-                    'system'
-                );
+            } catch (Throwable $e) {
 
-
-
-                return ['message' => 'Site submitted', 'site_id' => $id, 'is_approved' => $data['is_approved'] ?? false];
             }
 
-            if ($submissionTable) {
-                $payload = json_encode($input, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            try {
                 $stmt = $this->db->prepare(
-                    "INSERT INTO `$submissionTable` (researcher_id, submission_type, submission_data, submission_status, submitted_at)
-                     VALUES (:researcher_id, :submission_type, :submission_data, :submission_status, NOW())"
+                    "INSERT INTO ResearcherActivities (researcher_id, activity_type, description, related_site_id) 
+                     VALUES (:uid, 'add_site', :desc, :sid)"
                 );
                 $stmt->execute([
-                    'researcher_id' => $context['sub'] ?? null,
-                    'submission_type' => 'new',
-                    'submission_data' => $payload,
-                    'submission_status' => 'pending',
+                    'uid' => $context['sub'] ?? null,
+                    'desc' => "Added new site: " . ($data['site_name'] ?? 'Unknown'),
+                    'sid' => $id
                 ]);
-                $id = (int) $this->db->lastInsertId();
-                return ['message' => 'Site submitted', 'submission_id' => $id, 'is_approved' => false];
+            } catch (Throwable $e) {
+
             }
 
-            return ['_status' => 400, 'error' => 'No valid fields to insert'];
+            $this->notifications->notifyAdmins(
+                'New Site Submitted',
+                "A new site '" . ($data['site_name'] ?? 'Unknown') . "' has been submitted (auto-approved).",
+                'system'
+            );
+
+            return [
+                'message' => 'Site saved successfully',
+                'site_id' => $id,
+                'is_approved' => $data['is_approved'] ?? true,
+                'status' => $data['status'] ?? 'approved'
+            ];
+
         } catch (Throwable $e) {
             return ['_status' => 500, 'error' => 'Failed to create site', 'detail' => $e->getMessage()];
         }
@@ -276,7 +258,6 @@ class SitesController
 
             $columns = $this->siteColumns($table);
 
-            // Update both is_approved and status if they exist
             if (in_array('is_approved', $columns, true)) {
                 $stmt = $this->db->prepare("UPDATE `$table` SET is_approved = :approved WHERE site_id = :id");
                 $stmt->execute(['approved' => 1, 'id' => $id]);
@@ -291,7 +272,6 @@ class SitesController
                 return ['_status' => 500, 'error' => 'No approval column found'];
             }
 
-            // Notify Researcher
             $potentialCols = ['site_name', 'researcher_id', 'created_by'];
             $selectCols = array_intersect($potentialCols, $columns);
 
@@ -314,7 +294,7 @@ class SitesController
                                 'system'
                             );
                         } catch (Throwable $e) {
-                            // Ignore notification errors to ensure approval persists
+
                         }
                     }
                 }
@@ -342,7 +322,6 @@ class SitesController
             $updates = [];
             $params = ['id' => $id];
 
-            // 1. Handle Regions (lookup or create ID from Name)
             if (isset($input['region']) && !empty($input['region']) && in_array('region_id', $columns, true)) {
                 $regName = trim($input['region']);
                 $stmt = $this->db->prepare("SELECT region_id FROM Regions WHERE region_name = ?");
@@ -358,7 +337,6 @@ class SitesController
                 unset($input['region']);
             }
 
-            // 2. Handle Categories (lookup or create ID from Name)
             if (isset($input['category']) && !empty($input['category']) && in_array('category_id', $columns, true)) {
                 $catName = trim($input['category']);
                 $stmt = $this->db->prepare("SELECT category_id FROM Categories WHERE category_name = ?");
@@ -374,11 +352,9 @@ class SitesController
                 unset($input['category']);
             }
 
-            // 3. Handle Image (Update existing primary or insert new)
             if (isset($input['image']) && !empty($input['image'])) {
                 $imgUrl = trim($input['image']);
 
-                // Check for existing primary image
                 $checkStmt = $this->db->prepare("SELECT image_id FROM SiteImages WHERE site_id = ? AND is_primary = 1 LIMIT 1");
                 $checkStmt->execute([$id]);
                 $existingImgId = $checkStmt->fetchColumn();
@@ -391,7 +367,6 @@ class SitesController
                         ->execute([$id, $imgUrl, $context['sub'] ?? null]);
                 }
 
-                // Keep image_url column in sync if it exists in Sites table
                 if (in_array('image_url', $columns, true)) {
                     $updates[] = "`image_url` = :image_url";
                     $params['image_url'] = $imgUrl;
@@ -399,7 +374,6 @@ class SitesController
                 unset($input['image']);
             }
 
-            // 4. Map Standard Keys from Frontend
             $map = [
                 'site_name' => 'site_name',
                 'description' => 'full_description',
@@ -417,7 +391,6 @@ class SitesController
                 }
             }
 
-            // 5. Check for any other direct matches
             foreach ($input as $key => $val) {
                 if (in_array($key, $columns, true) && !isset($params[$key]) && !in_array($key, ['site_id', 'id'])) {
                     $updates[] = "`$key` = :$key";
@@ -425,7 +398,6 @@ class SitesController
                 }
             }
 
-            // 6. Reset Approval Status on Researcher Edits
             if (in_array('is_approved', $columns, true) && !isset($input['is_approved']) && !isset($input['status'])) {
                 $updates[] = "`is_approved` = 0";
                 if (in_array('status', $columns, true)) {
@@ -462,11 +434,8 @@ class SitesController
                 return ['_status' => 404, 'error' => 'Sites table not found'];
             }
 
-            // 0. Delete Reviews first (they depend on Visits and Site)
             $this->db->prepare("DELETE FROM Reviews WHERE site_id = ?")->execute([$id]);
 
-            // 1. Clean up GuideRequests dependencies (Payments, Visits, Notifications)
-            // Fetch request IDs linked to this site
             $stmt = $this->db->prepare("SELECT request_id FROM GuideRequests WHERE site_id = ?");
             $stmt->execute([$id]);
             $requestIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
@@ -474,41 +443,31 @@ class SitesController
             if (!empty($requestIds)) {
                 $inQuery = implode(',', array_fill(0, count($requestIds), '?'));
 
-                // Fetch Payment IDs to clean up notifications linked to them
                 $stmtP = $this->db->prepare("SELECT payment_id FROM Payments WHERE request_id IN ($inQuery)");
                 $stmtP->execute($requestIds);
                 $paymentIds = $stmtP->fetchAll(PDO::FETCH_COLUMN);
 
-                // Delete Notifications linked to these payments
                 if (!empty($paymentIds)) {
                     $inPayment = implode(',', array_fill(0, count($paymentIds), '?'));
                     $this->db->prepare("DELETE FROM Notifications WHERE related_payment_id IN ($inPayment)")->execute($paymentIds);
-                    // Also delete PaymentProofs if they exist (though schema has ON DELETE CASCADE for proofs, explicitly safer)
+
                 }
 
-                // Delete Notifications linked to these requests
                 $this->db->prepare("DELETE FROM Notifications WHERE related_request_id IN ($inQuery)")->execute($requestIds);
 
-                // Delete Payments linked to these requests
                 $this->db->prepare("DELETE FROM Payments WHERE request_id IN ($inQuery)")->execute($requestIds);
 
-                // Delete Visits linked to these requests
                 $this->db->prepare("DELETE FROM Visits WHERE request_id IN ($inQuery)")->execute($requestIds);
 
-                // Finally, delete the GuideRequests
                 $this->db->prepare("DELETE FROM GuideRequests WHERE site_id = ?")->execute([$id]);
             }
 
-            // 2. Clean up other direct dependencies
             $this->db->prepare("DELETE FROM ResearcherActivities WHERE related_site_id = ?")->execute([$id]);
             $this->db->prepare("DELETE FROM SiteSubmissions WHERE site_id = ?")->execute([$id]);
 
-            // SiteImages and SiteGuideTypes should auto-delete via ON DELETE CASCADE in schema,
-            // but for safety we can manually delete if schema is out of sync in some envs
             $this->db->prepare("DELETE FROM SiteImages WHERE site_id = ?")->execute([$id]);
             $this->db->prepare("DELETE FROM SiteGuideTypes WHERE site_id = ?")->execute([$id]);
 
-            // 3. Delete the Site
             $stmt = $this->db->prepare("DELETE FROM `$table` WHERE site_id = ?");
             $stmt->execute([$id]);
 

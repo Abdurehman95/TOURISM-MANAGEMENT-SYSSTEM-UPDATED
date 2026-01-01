@@ -28,7 +28,15 @@ export default function ResearcherSites() {
       try {
         const data = await getResearcherSites(user.user_id);
         if (Array.isArray(data)) {
-          setSites(data);
+
+          const mySites = data.filter(s =>
+            s.researcher_id == user.user_id ||
+            s.created_by == user.user_id ||
+
+            !s.researcher_id
+          ).filter(s => s.researcher_id == user.user_id || s.created_by == user.user_id);
+
+          setSites(mySites);
         } else {
           console.error("ResearcherSites: Expected array, got", data);
           setSites([]);
@@ -41,8 +49,8 @@ export default function ResearcherSites() {
   };
 
   const handleDelete = async (id) => {
-    // eslint-disable-next-line no-restricted-globals
-    if (!confirm(t('msg_confirm_draft_delete'))) return;
+
+    if (!window.confirm(t('msg_confirm_draft_delete'))) return;
     try {
       await deleteSite(id);
       loadSites();
@@ -83,16 +91,32 @@ export default function ResearcherSites() {
             <table className="table">
               <thead>
                 <tr>
-                  <th>{t('lbl_site_name')}</th>
-                  <th>{t('lbl_location')}</th>
-                  <th>{t('th_status')}</th>
-                  <th>{t('th_actions')}</th>
+                  <th style={{ width: '100px' }}>{t('Image') || 'Image'}</th>
+                  <th>{t('Site Name') || 'Site Name'}</th>
+                  <th>{t('Location') || 'Location'}</th>
+                  <th>{t('Status') || 'Status'}</th>
+                  <th>{t('Actions') || 'Actions'}</th>
                 </tr>
               </thead>
               <tbody>
                 {sites.length === 0 && <tr><td colSpan="4" style={{ textAlign: 'center' }}>{t('msg_no_sites')}</td></tr>}
                 {sites.map(s => (
                   <tr key={s.site_id}>
+                    <td>
+                      <div
+                        style={{ width: '80px', height: '60px', position: 'relative', cursor: s.map_url ? 'pointer' : 'default' }}
+                        onClick={() => s.map_url && window.open(s.map_url, '_blank')}
+                        title={`${s.site_name}\n${s.description || s.short_description || ''}\n${s.map_url ? 'Click to view map' : ''}`}
+                      >
+                        <img
+                          src={s.image_url || s.image || 'https://via.placeholder.com/100'}
+                          alt={s.site_name}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '4px' }}
+                          onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/100?text=No+Img'; }}
+                        />
+                        {s.map_url && <div style={{ position: 'absolute', bottom: 0, right: 0, background: 'white', borderRadius: '4px 0 4px 0', padding: '1px 3px', fontSize: '10px' }}>📍</div>}
+                      </div>
+                    </td>
                     <td>{s.site_name}</td>
                     <td>{s.location || s.location_address}</td>
                     <td>
@@ -108,8 +132,34 @@ export default function ResearcherSites() {
                       </span>
                     </td>
                     <td>
-                      <button className="btn-sm" onClick={() => handleEdit(s)}>{t('btn_edit')}</button>
-                      {!s.is_approved && <button className="btn-sm btn-danger" onClick={() => handleDelete(s.site_id)}>{t('btn_delete')}</button>}
+                      <div className="action-buttons-container" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        <button
+                          className="btn-sm btn-outline-primary"
+                          onClick={() => handleEdit(s)}
+                          title={t('btn_edit')}
+                          style={{ display: 'flex', alignItems: 'center', gap: '5px' }}
+                        >
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                          {t('btn_edit')}
+                        </button>
+                        {!s.is_approved && (
+                          <button
+                            className="btn-sm btn-icon-danger"
+                            onClick={() => handleDelete(s.site_id)}
+                            title={t('btn_delete')}
+                            style={{
+                              background: 'none', border: '1px solid #fee2e2', color: '#dc2626',
+                              borderRadius: '6px', padding: '6px', cursor: 'pointer',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center'
+                            }}
+                          >
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="3 6 5 6 21 6"></polyline>
+                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}

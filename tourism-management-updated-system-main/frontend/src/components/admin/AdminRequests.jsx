@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AdminSidebar from './AdminSidebar';
 import './admin.css';
-import { getRequests, getPayments, approveRequest, rejectRequest, assignGuide } from './adminService';
+import { getRequests, getPayments, approveRequest, rejectRequest, assignGuide, deleteRequest } from './adminService';
 import ThemeToggle from '../common/ThemeToggle';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -49,6 +49,12 @@ export default function AdminRequests() {
     try { await rejectRequest(id); refresh(); } catch (err) { alert(t('msg_update_fail') + ': ' + err.message); }
   };
 
+  const handleDelete = async (id) => {
+
+    if (!window.confirm(t('msg_confirm_delete') || 'Are you sure you want to delete this request?')) return;
+    try { await deleteRequest(id); refresh(); } catch (err) { alert((t('msg_delete_fail') || 'Delete failed') + ': ' + err.message); }
+  };
+
   const startAssign = (id) => {
     setAssigningId(id);
     setGuideIdInput('');
@@ -90,45 +96,107 @@ export default function AdminRequests() {
                   <td>{r.number_of_visitors}</td>
                   <td>{formatStatus(r.request_status)}</td>
                   <td>
-                    {r.request_status === 'pending' && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                        <button className="btn-sm" onClick={() => handleApprove(r.request_id)}>{t('btn_approve')}</button>
-                        <button className="btn-sm btn-danger" onClick={() => handleReject(r.request_id)}>{t('btn_reject')}</button>
-                      </div>
-                    )}
-                    {r.request_status === 'approved' && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                        {assigningId === r.request_id ? (
-                          <>
-                            <input
-                              type="number"
-                              placeholder={t('th_id')}
-                              value={guideIdInput}
-                              onChange={e => setGuideIdInput(e.target.value)}
-                              style={{ width: '60px', padding: '4px', margin: 0, fontSize: '0.8rem' }}
-                            />
-                            <button className="btn-sm" onClick={() => submitAssign(r.request_id)}>{t('btn_save')}</button>
-                            <button className="btn-sm btn-outline" onClick={() => setAssigningId(null)} style={{ padding: '4px 8px' }}>✕</button>
-                          </>
-                        ) : (
-                          <>
+                    <div className="action-buttons-container" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                      {r.request_status === 'pending' && (
+                        <>
+                          <button
+                            className="btn-sm btn-success"
+                            onClick={() => handleApprove(r.request_id)}
+                            title={t('btn_approve')}
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '6px' }}
+                          >
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                          </button>
+                          <button
+                            className="btn-sm btn-outline-danger"
+                            onClick={() => handleReject(r.request_id)}
+                            title={t('btn_reject')}
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '6px' }}
+                          >
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                          </button>
+                        </>
+                      )}
+
+                      {r.request_status === 'approved' && (
+                        <>
+                          {assigningId === r.request_id ? (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#f8f9fa', padding: '4px', borderRadius: '4px', border: '1px solid #dee2e6' }}>
+                              <input
+                                type="number"
+                                placeholder="ID"
+                                value={guideIdInput}
+                                onChange={e => setGuideIdInput(e.target.value)}
+                                style={{ width: '50px', padding: '4px', margin: 0, fontSize: '0.8rem', border: '1px solid #ced4da', borderRadius: '3px' }}
+                                autoFocus
+                              />
+                              <button
+                                className="btn-sm btn-primary"
+                                onClick={() => submitAssign(r.request_id)}
+                                title={t('btn_save')}
+                                style={{ padding: '4px 8px' }}
+                              >
+                                ✓
+                              </button>
+                              <button
+                                className="btn-sm btn-ghost"
+                                onClick={() => setAssigningId(null)}
+                                style={{ padding: '4px 8px', color: '#6c757d' }}
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          ) : (
                             <button
-                              className="btn-sm"
-                              style={{ fontSize: '0.75rem', padding: '4px 8px' }}
+                              className="btn-sm btn-outline-primary"
                               onClick={() => startAssign(r.request_id)}
+                              title={t('btn_assign_agent')}
+                              style={{ display: 'flex', alignItems: 'center', gap: '5px' }}
                             >
-                              {t('btn_assign_agent')}
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                              <span style={{ fontSize: '0.75rem' }}>{t('btn_assign_agent')}</span>
                             </button>
-                            <button className="btn-sm btn-danger" onClick={() => handleReject(r.request_id)}>{t('btn_reject')}</button>
-                          </>
-                        )}
-                      </div>
-                    )}
-                    {r.request_status === 'rejected' && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                        <button className="btn-sm" onClick={() => handleApprove(r.request_id)}>{t('btn_approve')}</button>
-                      </div>
-                    )}
+                          )}
+                          <button
+                            className="btn-sm btn-outline-danger"
+                            onClick={() => handleReject(r.request_id)}
+                            title={t('btn_reject')}
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '6px' }}
+                          >
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                          </button>
+                        </>
+                      )}
+
+                      {r.request_status === 'rejected' && (
+                        <button
+                          className="btn-sm btn-outline-success"
+                          onClick={() => handleApprove(r.request_id)}
+                          title={t('btn_approve')}
+                          style={{ display: 'flex', alignItems: 'center', gap: '5px' }}
+                        >
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                          {t('btn_approve')}
+                        </button>
+                      )}
+
+                      <button
+                        className="btn-sm btn-icon-danger"
+                        onClick={() => handleDelete(r.request_id)}
+                        title={t('btn_delete') || 'Delete'}
+                        style={{
+                          background: 'none', border: '1px solid #fee2e2', color: '#dc2626',
+                          borderRadius: '6px', padding: '6px', cursor: 'pointer',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          marginLeft: 'auto'
+                        }}
+                      >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="3 6 5 6 21 6"></polyline>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

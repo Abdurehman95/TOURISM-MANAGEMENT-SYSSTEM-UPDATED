@@ -46,7 +46,6 @@ export default function NotificationDropdown({ userType }) {
     }
   };
 
-  // Close notification dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (showNotifications) {

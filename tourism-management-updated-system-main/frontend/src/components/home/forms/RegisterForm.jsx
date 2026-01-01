@@ -31,14 +31,12 @@ function RegisterForm() {
     e.preventDefault();
     setError('');
 
-    // Password strength check
     const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
     if (!strongRegex.test(formData.password)) {
       setError("Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a digit, and a special character.");
       return;
     }
 
-    // Phone validation
     const phone = formData.phone.replace(/\s/g, '');
     if (phone.startsWith('+251')) {
       const remaining = phone.substring(4);
@@ -51,7 +49,6 @@ function RegisterForm() {
       return;
     }
 
-    // Map form data to user object structure
     const userData = {
       first_name: formData.firstName,
       last_name: formData.lastName,
@@ -70,10 +67,9 @@ function RegisterForm() {
     }
   };
 
-
   return (
     <div className="register-container" style={{ position: 'relative' }}>
-      {/* Theme Toggle inside the box */}
+      {}
       <div style={{ position: 'absolute', top: '15px', right: '15px', zIndex: 10 }}>
         <ThemeToggle />
       </div>

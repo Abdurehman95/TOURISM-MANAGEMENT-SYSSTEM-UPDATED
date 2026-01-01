@@ -28,7 +28,7 @@ function Contact() {
       background: 'var(--bg-primary)'
     }}>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-        {/* Header */}
+        {}
         <div style={{ textAlign: 'center', marginBottom: '50px' }}>
           <h2 style={{
             fontSize: '32px',
@@ -46,14 +46,14 @@ function Contact() {
           }}></div>
         </div>
 
-        {/* Contact Form */}
+        {}
         <form onSubmit={handleSubmit} style={{
           background: 'var(--card-bg)',
           padding: '40px',
           borderRadius: '12px',
           boxShadow: 'var(--card-shadow)'
         }}>
-          {/* Name and Email Row */}
+          {}
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
@@ -102,7 +102,7 @@ function Contact() {
             />
           </div>
 
-          {/* Message Textarea */}
+          {}
           <textarea
             name="message"
             placeholder={t('contact_msg_ph')}
@@ -128,7 +128,7 @@ function Contact() {
             onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
           />
 
-          {/* Submit Button */}
+          {}
           <button
             type="submit"
             style={{

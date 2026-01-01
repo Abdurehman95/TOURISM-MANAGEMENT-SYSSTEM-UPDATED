@@ -1,4 +1,4 @@
-  * {
+* {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -46,7 +46,6 @@
             margin-bottom: 20px;
         }
             
-
         .form-group {
             margin-bottom: 20px;
         }
@@ -136,7 +135,6 @@
             border-left: 4px solid #2e7d32;
         }
 
-            /* Mobile First Responsive Design */
         @media (max-width: 480px) {
             .login-container {
                 padding: 30px 20px;

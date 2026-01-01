@@ -66,7 +66,6 @@ export default function AdminDashboard() {
             <button className="btn-outline" onClick={() => { setAddUserType('researcher'); setShowAddUser(true); }}>{t('dash_add_researcher')}</button>
           </div>
 
-
           <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
             <ThemeToggle />
             <NotificationDropdown userType="admin" />
@@ -76,7 +75,7 @@ export default function AdminDashboard() {
 
         {summary ? (
           <section className="charts-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)', gap: '30px', marginBottom: '40px' }}>
-            {/* Bar Chart - System Overview */}
+            {}
             <div className="panel">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px' }}>
                 <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#1e293b' }}>System Performance</h3>
@@ -93,13 +92,13 @@ export default function AdminDashboard() {
                           summary.totalUsers,
                           summary.totalSites,
                           summary.totalVisits,
-                          summary.totalPayments
+                          summary.totalRevenue
                         ],
                         backgroundColor: [
-                          'rgba(99, 102, 241, 0.9)', // Indigo
-                          'rgba(16, 185, 129, 0.9)', // Emerald
-                          'rgba(245, 158, 11, 0.9)', // Amber
-                          'rgba(244, 63, 94, 0.9)',  // Rose
+                          'rgba(99, 102, 241, 0.9)',
+                          'rgba(16, 185, 129, 0.9)',
+                          'rgba(245, 158, 11, 0.9)',
+                          'rgba(244, 63, 94, 0.9)',
                         ],
                         borderRadius: 6,
                         barThickness: 40,
@@ -118,6 +117,19 @@ export default function AdminDashboard() {
                         bodyFont: { size: 12, family: "'Inter', sans-serif" },
                         cornerRadius: 8,
                         displayColors: false,
+                        callbacks: {
+                          label: (context) => {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                              label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                              label += context.parsed.y;
+                              if (context.dataIndex === 3) label += ' ETB';
+                            }
+                            return label;
+                          }
+                        }
                       }
                     },
                     scales: {
@@ -148,7 +160,7 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* Doughnut Chart - Distribution */}
+            {}
             <div className="panel">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px' }}>
                 <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#1e293b' }}>Distribution</h3>
@@ -157,20 +169,20 @@ export default function AdminDashboard() {
               <div style={{ height: '350px', position: 'relative' }}>
                 <Doughnut
                   data={{
-                    labels: ['Users', 'Sites', 'Visits', 'Revenue'],
+                    labels: ['Users', 'Sites', 'Visits', 'Payments'],
                     datasets: [
                       {
                         data: [
                           summary.totalUsers,
                           summary.totalSites,
                           summary.totalVisits,
-                          summary.totalPayments
+                          summary.totalPaymentsCount || 0
                         ],
                         backgroundColor: [
-                          '#6366f1', // Indigo 500
-                          '#10b981', // Emerald 500
-                          '#f59e0b', // Amber 500
-                          '#f43f5e', // Rose 500
+                          '#6366f1',
+                          '#10b981',
+                          '#f59e0b',
+                          '#f43f5e',
                         ],
                         borderWidth: 0,
                         hoverOffset: 4,
@@ -180,7 +192,7 @@ export default function AdminDashboard() {
                   options={{
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '75%', // Thinner ring
+                    cutout: '75%',
                     plugins: {
                       legend: {
                         position: 'bottom',
@@ -199,7 +211,7 @@ export default function AdminDashboard() {
                     },
                   }}
                 />
-                {/* Center Text Overlay */}
+                {}
                 <div style={{
                   position: 'absolute',
                   top: '40%',
@@ -209,7 +221,7 @@ export default function AdminDashboard() {
                   pointerEvents: 'none'
                 }}>
                   <div style={{ fontSize: '2rem', fontWeight: '800', color: '#1e293b' }}>
-                    {summary.totalUsers + summary.totalSites + summary.totalVisits + summary.totalPayments}
+                    {summary.totalUsers + summary.totalSites + summary.totalVisits + (summary.totalPaymentsCount || 0)}
                   </div>
                   <div style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: '500' }}>Total Events</div>
                 </div>

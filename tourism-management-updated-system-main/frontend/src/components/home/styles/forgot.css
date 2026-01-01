@@ -57,12 +57,10 @@
   cursor: pointer;
 }
 
-
 .btnn:hover {
   background: #1d4ed8;
 }
 
-/* Responsive */
 @media (max-width: 375px) {
   .forgot-form {
     width: 90%;

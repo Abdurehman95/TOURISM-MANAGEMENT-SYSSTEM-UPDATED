@@ -46,7 +46,7 @@ function Destinations() {
       }}
     >
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        {/* Header */}
+        {}
         <div style={{ textAlign: 'center', marginBottom: '60px' }}>
           <span style={{
             display: 'inline-block',
@@ -81,7 +81,7 @@ function Destinations() {
           </p>
         </div>
 
-        {/* Grid */}
+        {}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
@@ -97,7 +97,7 @@ function Destinations() {
                 height: '400px',
                 cursor: 'pointer',
                 boxShadow: 'var(--card-shadow)',
-                group: 'card' // conceptual group for hover
+                group: 'card'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.querySelector('.bg-image').style.transform = 'scale(1.1)';
@@ -108,7 +108,7 @@ function Destinations() {
                 e.currentTarget.querySelector('.overlay').style.background = 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%)';
               }}
             >
-              {/* Background Image */}
+              {}
               <div
                 className="bg-image"
                 style={{
@@ -124,7 +124,7 @@ function Destinations() {
                 }}
               />
 
-              {/* Gradient Overlay */}
+              {}
               <div
                 className="overlay"
                 style={{
@@ -158,7 +158,7 @@ function Destinations() {
                     {dest.title}
                   </h3>
 
-                  {/* Decorative Line */}
+                  {}
                   <div style={{
                     width: '60px',
                     height: '4px',

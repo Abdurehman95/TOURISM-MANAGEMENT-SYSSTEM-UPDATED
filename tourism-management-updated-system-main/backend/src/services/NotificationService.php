@@ -28,14 +28,14 @@ class NotificationService
                 'payment_id' => $paymentId,
             ]);
         } catch (\Throwable $e) {
-            // Silently fail or log error so main flow isn't interrupted
+
             error_log("Notification Create Error: " . $e->getMessage());
         }
     }
 
     public function notifyAdmins(string $title, string $message, string $type, ?int $requestId = null, ?int $paymentId = null): void
     {
-        // Find all admins
+
         $stmt = $this->db->query("SELECT user_id FROM Users WHERE user_type = 'admin'");
         $admins = $stmt->fetchAll(PDO::FETCH_COLUMN);
 

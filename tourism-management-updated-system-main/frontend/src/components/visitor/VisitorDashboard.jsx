@@ -23,7 +23,7 @@ export default function VisitorDashboard() {
       setUser(userData);
       visitorService.getHistory(userData.user_id).then(requests => {
         if (!Array.isArray(requests)) {
-          // console.error("VisitorDashboard: Expected array, got", requests);
+
           return;
         }
         setSummary({

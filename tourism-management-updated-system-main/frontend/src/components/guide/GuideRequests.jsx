@@ -52,6 +52,17 @@ export default function GuideRequests() {
     }
   };
 
+  const handleDelete = async (requestId) => {
+    if (window.confirm(t('msg_confirm_delete') || 'Delete request?')) {
+      try {
+        await guideService.deleteRequest(requestId);
+        loadRequests();
+      } catch (err) {
+        alert('Failed to delete: ' + err.message);
+      }
+    }
+  };
+
   return (
     <div className="guide-layout">
       <GuideSidebar />
@@ -92,25 +103,51 @@ export default function GuideRequests() {
                         </span>
                       </td>
                       <td>
-                        {(req.request_status === 'assigned' || req.request_status === 'approved') && (
-                          <div style={{ display: 'flex', gap: '10px' }}>
-                            <button
-                              className="guide-btn btn-primary"
-                              onClick={() => handleStatusChange(req.request_id, 'accepted_by_guide')}
-                            >
+                        <div className="action-buttons-container" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                          {(req.request_status === 'assigned' || req.request_status === 'approved') && (
+                            <>
+                              <button
+                                className="btn-sm btn-success"
+                                onClick={() => handleStatusChange(req.request_id, 'accepted_by_guide')}
+                                title={t('status_accepted')}
+                                style={{ display: 'flex', alignItems: 'center', gap: '5px' }}
+                              >
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                {t('status_accepted')}
+                              </button>
+                              <button
+                                className="btn-sm btn-outline-danger"
+                                onClick={() => handleStatusChange(req.request_id, 'rejected_by_guide')}
+                                title={t('btn_reject')}
+                                style={{ display: 'flex', alignItems: 'center', gap: '5px' }}
+                              >
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                {t('btn_reject')}
+                              </button>
+                            </>
+                          )}
+                          {req.request_status === 'accepted_by_guide' && (
+                            <span className="badge bg-success" style={{ padding: '8px 12px', fontSize: '0.85rem' }}>
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: '5px' }}><polyline points="20 6 9 17 4 12"></polyline></svg>
                               {t('status_accepted')}
-                            </button>
-                            <button
-                              className="guide-btn btn-danger"
-                              onClick={() => handleStatusChange(req.request_id, 'rejected_by_guide')}
-                            >
-                              {t('btn_reject')}
-                            </button>
-                          </div>
-                        )}
-                        {req.request_status === 'accepted_by_guide' && (
-                          <span style={{ color: '#52c41a', fontWeight: 'bold' }}>{t('status_accepted')}</span>
-                        )}
+                            </span>
+                          )}
+                          <button
+                            className="btn-sm btn-icon-danger"
+                            onClick={() => handleDelete(req.request_id)}
+                            title={t('btn_delete') || 'Delete'}
+                            style={{
+                              background: 'none', border: '1px solid #fee2e2', color: '#dc2626',
+                              borderRadius: '6px', padding: '6px', cursor: 'pointer',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center'
+                            }}
+                          >
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="3 6 5 6 21 6"></polyline>
+                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}

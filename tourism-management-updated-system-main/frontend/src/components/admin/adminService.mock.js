@@ -89,7 +89,7 @@ export function assignGuide(requestId, payload) {
 
   const request = data.requests[reqIndex];
   request.assigned_guide_id = payload?.guide_id;
-  // Mark as assigned so the correct site agent sees it in requests/schedule
+
   request.request_status = 'assigned';
 
   localStorage.setItem('tourism_app_data', JSON.stringify(data));
@@ -116,7 +116,7 @@ export function updateProfile(username, data) {
     setTimeout(() => {
       if (username !== admin.username) return reject(new Error('User not found'));
       if (data.name) {
-        // admin.name = data.name; 
+
       }
       resolve({ ok: true, user: { ...admin, ...data } });
     }, 300);

@@ -92,7 +92,7 @@ class PaymentsController
                 (int) $details['request_id'],
                 (int) $details['payment_id']
             );
-            // Also notify admin of successful payment
+
             $this->notifications->notifyAdmins(
                 'Payment Received',
                 "A Chapa payment of {$details['total_amount']} ETB has been received for request #{$details['request_id']}.",

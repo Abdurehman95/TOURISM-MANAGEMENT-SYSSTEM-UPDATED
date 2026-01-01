@@ -7,7 +7,6 @@ import { getResearcherSummary } from './researcherService';
 import UserProfileMenu from '../common/UserProfileMenu';
 import NotificationDropdown from '../common/NotificationDropdown';
 
-// Icon Components
 const SitesIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
@@ -41,7 +40,6 @@ export default function ResearcherDashboard() {
         .catch(err => console.error(err));
     }
   }, [user.user_id]);
-
 
   return (
     <div className="researcher-layout">

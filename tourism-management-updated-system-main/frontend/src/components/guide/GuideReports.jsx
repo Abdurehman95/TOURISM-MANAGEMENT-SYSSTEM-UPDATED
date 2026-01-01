@@ -16,9 +16,8 @@ export default function GuideReports() {
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
       guideService.getAssignedRequests(user.user_id).then(data => {
-        // In a real app, we'd filter for tours that have passed date-wise but aren't reported yet
-        // For demo, let's allow reporting on any 'accepted' tour
-        const reportable = data.filter(r => r.request_status === 'accepted_by_guide');
+
+        const reportable = data.filter(r => !['rejected', 'rejected_by_guide', 'cancelled'].includes(r.request_status));
         setCompletedTours(reportable);
       });
     }
@@ -38,13 +37,12 @@ export default function GuideReports() {
       setMessage(t('msg_report_success'));
       setReportText('');
       setSelectedTour('');
-      // Optionally update the request status to 'completed' here
+
       await guideService.updateRequestStatus(Number(selectedTour), 'completed');
 
-      // Refresh list
       const user = JSON.parse(localStorage.getItem('user'));
       guideService.getAssignedRequests(user.user_id).then(data => {
-        const reportable = data.filter(r => r.request_status === 'accepted_by_guide');
+        const reportable = data.filter(r => !['rejected', 'rejected_by_guide', 'cancelled'].includes(r.request_status));
         setCompletedTours(reportable);
       });
     } else {

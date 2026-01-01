@@ -50,7 +50,6 @@ class RequestsController
 
         $requestId = (int) $this->db->lastInsertId();
 
-        // Fetch visitor name
         $visitorName = "Visitor #$visitorId";
         try {
             $uStmt = $this->db->prepare("SELECT first_name, last_name FROM Users WHERE user_id = ?");
@@ -107,7 +106,6 @@ class RequestsController
         ';
         $params = [];
 
-        // If guide, filter by assigned requests OR approved requests needing a guide
         if (isset($context['role']) && ($context['role'] === 'guide' || $context['role'] === 'site_agent')) {
             $guideId = (int) ($context['sub'] ?? 0);
             $sql = '
@@ -144,7 +142,6 @@ class RequestsController
         $stmt = $this->db->prepare('UPDATE GuideRequests SET request_status = "approved" WHERE request_id = :id');
         $stmt->execute(['id' => $requestId]);
 
-        // --- Create Visit Record ---
         try {
             $req = $this->db->prepare("SELECT * FROM GuideRequests WHERE request_id = :id");
             $req->execute(['id' => $requestId]);
@@ -162,11 +159,9 @@ class RequestsController
                 ]);
             }
         } catch (\Throwable $e) {
-            // ignore
-        }
-        // ---------------------------
 
-        // Notify Visitor
+        }
+
         if (isset($request['visitor_id'])) {
             $this->notifications->create(
                 (int) $request['visitor_id'],
@@ -188,7 +183,6 @@ class RequestsController
         $stmt = $this->db->prepare('UPDATE GuideRequests SET request_status = "rejected" WHERE request_id = :id');
         $stmt->execute(['id' => $requestId]);
 
-        // Notify Visitor
         $stmt = $this->db->prepare("SELECT visitor_id FROM GuideRequests WHERE request_id = ?");
         $stmt->execute([$requestId]);
         $visitorId = $stmt->fetchColumn();
@@ -239,7 +233,6 @@ class RequestsController
             'id' => $requestId,
         ]);
 
-        // Notify visitor if guide accepted or rejected
         if (in_array($status, ['accepted_by_guide', 'rejected_by_guide'])) {
             $stmt = $this->db->prepare("SELECT visitor_id FROM GuideRequests WHERE request_id = ?");
             $stmt->execute([$requestId]);
@@ -265,5 +258,44 @@ class RequestsController
             'status' => $status,
             'updated_by' => $context['sub'] ?? null,
         ];
+    }
+
+    public function delete(int $requestId): array
+    {
+        try {
+
+            $stmt = $this->db->prepare("SELECT payment_id FROM Payments WHERE request_id = ?");
+            $stmt->execute([$requestId]);
+            $paymentIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+            if (!empty($paymentIds)) {
+                $inQuery = implode(',', array_fill(0, count($paymentIds), '?'));
+                $this->db->prepare("DELETE FROM Notifications WHERE related_payment_id IN ($inQuery)")->execute($paymentIds);
+                $this->db->prepare("DELETE FROM PaymentProofs WHERE payment_id IN ($inQuery)")->execute($paymentIds);
+                $this->db->prepare("DELETE FROM Payments WHERE request_id = ?")->execute([$requestId]);
+            }
+
+            $this->db->prepare("DELETE FROM Notifications WHERE related_request_id = ?")->execute([$requestId]);
+
+            $stmt = $this->db->prepare("SELECT visit_id FROM Visits WHERE request_id = ?");
+            $stmt->execute([$requestId]);
+            $visitIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+            if (!empty($visitIds)) {
+                $inVisits = implode(',', array_fill(0, count($visitIds), '?'));
+                $this->db->prepare("DELETE FROM Reviews WHERE visit_id IN ($inVisits)")->execute($visitIds);
+            }
+            $this->db->prepare("DELETE FROM Visits WHERE request_id = ?")->execute([$requestId]);
+
+            $stmt = $this->db->prepare("DELETE FROM GuideRequests WHERE request_id = ?");
+            $stmt->execute([$requestId]);
+
+            if ($stmt->rowCount() === 0) {
+                return ['_status' => 404, 'error' => 'Request not found'];
+            }
+
+            return ['message' => 'Request deleted successfully'];
+        } catch (\Throwable $e) {
+            return ['_status' => 500, 'error' => 'Failed to delete request', 'detail' => $e->getMessage()];
+        }
     }
 }

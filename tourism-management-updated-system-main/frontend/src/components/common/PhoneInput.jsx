@@ -1,9 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-/**
- * PhoneInput Component with Country Code Selector
- * Combined in one row with unified border
- */
 const PhoneInput = ({
   value = '',
   onChange,
@@ -21,7 +17,6 @@ const PhoneInput = ({
   const dropdownRef = useRef(null);
   const containerRef = useRef(null);
 
-  // Fetch countries from REST Countries API
   useEffect(() => {
     fetch('https://restcountries.com/v3.1/all?fields=name,cca2,idd,flags')
       .then(res => res.json())
@@ -75,7 +70,15 @@ const PhoneInput = ({
   }, []);
 
   const handlePhoneChange = (e) => {
-    const number = e.target.value.replace(/[^\d]/g, '');
+    let number = e.target.value.replace(/[^\d]/g, '');
+
+    if (selectedCountry) {
+      const dialDigits = selectedCountry.dialCode.replace(/[^\d]/g, '');
+      if (number.startsWith(dialDigits)) {
+        number = number.substring(dialDigits.length);
+      }
+    }
+
     setPhoneNumber(number);
     if (onChange && selectedCountry) {
       const fullNumber = `${selectedCountry.dialCode}${number}`.replace(/[^\d]/g, '');
@@ -100,7 +103,7 @@ const PhoneInput = ({
 
   return (
     <div style={{ position: 'relative', width: '100%', ...style }} className={className}>
-      {/* Combined Input Container */}
+      {}
       <div
         ref={containerRef}
         style={{
@@ -113,7 +116,7 @@ const PhoneInput = ({
           height: '48px'
         }}
       >
-        {/* Country Code Selector Button */}
+        {}
         <div ref={dropdownRef} style={{ position: 'relative' }}>
           <button
             type="button"
@@ -172,7 +175,7 @@ const PhoneInput = ({
             )}
           </button>
 
-          {/* Dropdown Menu */}
+          {}
           {isDropdownOpen && (
             <div style={{
               position: 'absolute',
@@ -189,7 +192,7 @@ const PhoneInput = ({
               display: 'flex',
               flexDirection: 'column'
             }}>
-              {/* Search Input */}
+              {}
               <div style={{ padding: '16px', borderBottom: '1px solid #e5e7eb' }}>
                 <div style={{ position: 'relative' }}>
                   <svg
@@ -228,7 +231,7 @@ const PhoneInput = ({
                 </div>
               </div>
 
-              {/* Country List */}
+              {}
               <div style={{
                 overflowY: 'auto',
                 maxHeight: '320px',
@@ -302,7 +305,7 @@ const PhoneInput = ({
           )}
         </div>
 
-        {/* Phone Number Input */}
+        {}
         <input
           type="tel"
           value={phoneNumber}

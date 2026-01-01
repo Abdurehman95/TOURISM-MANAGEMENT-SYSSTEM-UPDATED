@@ -11,7 +11,6 @@ try {
   $pdo = Database::make();
   echo "Connected to database.\n";
 
-  // Check if column exists
   $stmt = $pdo->query("SHOW COLUMNS FROM Sites LIKE 'status'");
   if ($stmt->fetch()) {
     echo "Column 'status' already exists in 'Sites'.\n";

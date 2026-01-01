@@ -28,7 +28,6 @@ class ReportsController
       return ['_status' => 400, 'error' => 'request_id and report_text are required'];
     }
 
-    // Verify guide owns request
     $stmt = $this->db->prepare('SELECT assigned_guide_id FROM GuideRequests WHERE request_id = :rid');
     $stmt->execute(['rid' => $requestId]);
     $req = $stmt->fetch();

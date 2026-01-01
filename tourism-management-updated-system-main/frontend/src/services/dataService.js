@@ -215,7 +215,6 @@ export const dataService = {
     };
   },
 
-  // Fetch real statistics from API
   getStatsFromAPI: async () => {
     try {
       const response = await fetch('http://localhost:8000/api/stats');
@@ -230,7 +229,7 @@ export const dataService = {
       };
     } catch (error) {
       console.error('Error fetching stats:', error);
-      // Return fallback data
+
       return {
         sites: 50,
         guides: 100,

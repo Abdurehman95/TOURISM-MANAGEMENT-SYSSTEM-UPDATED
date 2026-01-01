@@ -1,4 +1,3 @@
-/* Admin Dashboard Styles */
 html,
 body {
     margin: 0;
@@ -159,12 +158,10 @@ body {
 
 .dashboard-row .stat-card {
     flex: 1 1 0px !important;
-    /* Grow, shrink, basis 0 */
+    
     min-width: 0 !important;
     margin: 0 !important;
 }
-
-/* Media queries removed to force horizontal layout on all screens as requested */
 
 .stat-card {
     background: var(--bg-secondary);
@@ -204,14 +201,14 @@ body {
 
 .panel {
     background: #ffffff;
-    /* Explicit white for clean look */
+    
     border-radius: 20px;
-    /* More rounded */
+    
     border: 1px solid rgba(226, 232, 240, 0.8);
-    /* Subtle border */
+    
     padding: 30px;
     box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
-    /* Soft, large diffuse shadow */
+    
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -333,7 +330,6 @@ body {
     color: var(--danger);
 }
 
-/* Modal Styles */
 .admin-modal-backdrop {
     position: fixed;
     top: 0;
@@ -430,7 +426,6 @@ textarea {
     border-radius: 10px;
 }
 
-/* Action Menu */
 .action-dropdown-container {
     position: relative;
 }
@@ -494,7 +489,6 @@ textarea {
     background: rgba(82, 196, 26, 0.1);
 }
 
-/* Mobile Sidebar Styles */
 .mobile-menu-button {
     display: none;
     font-size: 1.5rem;
@@ -566,7 +560,6 @@ textarea {
     }
 }
 
-/* Notification Dropdown Styles - Modern UI/UX */
 .notification-dropdown {
     position: absolute;
     top: calc(100% + 12px);
@@ -620,7 +613,6 @@ textarea {
     overflow-x: hidden;
 }
 
-/* Custom Scrollbar */
 .notification-dropdown>ul::-webkit-scrollbar {
     width: 6px;
 }
@@ -805,7 +797,6 @@ textarea {
     transform: translateY(0);
 }
 
-/* Mark as Read Button */
 .btn-sm {
     padding: 4px 12px;
     font-size: 0.75rem;
@@ -820,7 +811,6 @@ textarea {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Empty State */
 .notification-dropdown>div[style*="padding: 20px"] {
     padding: 40px 20px !important;
     text-align: center;

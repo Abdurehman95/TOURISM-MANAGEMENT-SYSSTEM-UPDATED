@@ -1,38 +1,38 @@
-    :root {
+:root {
         --bg-primary: #ffffff;
         --bg-secondary: #f8f9fa;
         --text-primary: #1f2937;
-        /* Slate 800 */
+        
         --text-secondary: #4b5563;
-        /* Slate 600 */
+        
         --accent-color: #2563eb;
-        /* Modern Blue */
+        
         --accent-hover: #1d4ed8;
         --card-bg: #ffffff;
         --header-bg: rgba(255, 255, 255, 0.95);
         --shadow-color: rgba(0, 0, 0, 0.05);
         --gradient-body: #ffffff;
-        /* Clean white background */
+        
         --hero-overlay: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
     }
 
     [data-theme='dark'] {
         --bg-primary: #0f172a;
-        /* Slate 900 */
+        
         --bg-secondary: #1e293b;
-        /* Slate 800 */
+        
         --text-primary: #f3f4f6;
-        /* Gray 100 */
+        
         --text-secondary: #9ca3af;
-        /* Gray 400 */
+        
         --accent-color: #60a5fa;
-        /* Blue 400 */
+        
         --accent-hover: #93c5fd;
         --card-bg: #1e293b;
         --header-bg: rgba(15, 23, 42, 0.95);
         --shadow-color: rgba(0, 0, 0, 0.3);
         --gradient-body: #0f172a;
-        /* Clean dark background */
+        
         --hero-overlay: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8));
     }
 
@@ -40,7 +40,7 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        /* Inherit font from body/index.css */
+        
     }
 
     body {
@@ -49,19 +49,16 @@
         min-height: 100vh;
     }
 
-    /* Hero styles are now in Hero.css */
     .home-page {
         overflow-x: hidden;
         position: relative;
         width: 100%;
     }
 
-    /* Ensure sections stack properly */
     .home-page>section {
         position: relative;
     }
 
-    /* Features Section */
     .features {
         background: var(--bg-primary);
         padding: 80px 2rem;
@@ -136,12 +133,11 @@
         margin-bottom: 8px;
         position: relative;
         border-radius: 8px;
-        /* font-family: 'Source Serif Pro', serif; */
+        
         font-weight: 400;
         background: transparent;
     }
 
-    /* About Section */
     .container {
         width: 100%;
         margin: 0 auto;
@@ -182,7 +178,7 @@
 
     .about-text h3 span {
         color: #e8b923;
-        /* Gold accent for contrast */
+        
     }
 
     .about-text p {
@@ -191,7 +187,7 @@
         margin-bottom: 15px;
         position: relative;
         border-radius: 8px;
-        /* font-family: 'Source Serif Pro', serif; */
+        
         font-weight: 400;
         background: transparent;
     }
@@ -244,7 +240,6 @@
         color: #3498db;
     }
 
-    /* Contact Section */
     .contact-section {
         background-color: var(--bg-primary);
         padding: 20px 2rem;
@@ -380,8 +375,6 @@
         font-size: 1.1rem;
     }
 
-
-    /* Enhanced Mobile Responsive Design */
     @media (max-width: 768px) {
         .menu-toggle {
             display: flex;
@@ -417,14 +410,12 @@
             display: block;
         }
 
-
         .nav-links a.login-btn,
         .nav-links a.register-btn {
             width: 60%;
             margin: 5px 0;
         }
 
-        /* Hero Section Mobile */
         .hero {
             padding: 120px 1rem 80px;
         }
@@ -445,7 +436,6 @@
             font-size: 1rem;
         }
 
-        /* About Section Mobile */
         .about-content {
             display: flex;
             flex-direction: column;
@@ -481,7 +471,6 @@
             border-radius: 20px;
         }
 
-        /* Features Section Mobile */
         .section-title h2,
         .contact-header h2 {
             font-size: 2rem;
@@ -516,7 +505,6 @@
             font-size: 1rem;
         }
 
-        /* Contact Section Mobile */
         .contact-section {
             padding: 60px 1rem;
         }
@@ -544,7 +532,6 @@
             font-size: 1rem;
         }
 
-        /* Footer Mobile */
         .footer {
             flex-direction: column;
             text-align: center;
@@ -562,7 +549,6 @@
         }
     }
 
-    /* Small Mobile Devices */
     @media (max-width: 480px) {
         .header {
             padding: 0.8rem 1rem;
@@ -622,7 +608,6 @@
         }
     }
 
-    /* Tablet Devices */
     @media (min-width: 769px) and (max-width: 1024px) {
         .nav {
             max-width: 95%;
@@ -698,7 +683,6 @@
         }
     }
 
-    /* Large Desktop Screens */
     @media (min-width: 1200px) {
         .nav {
             max-width: 1200px;
@@ -728,7 +712,6 @@
         }
     }
 
-    /* Extra Large Screens */
     @media (min-width: 1400px) {
         .hero h1 {
             font-size: 4rem;
@@ -750,7 +733,6 @@
         }
     }
 
-    /* Landscape Mobile Devices */
     @media (max-height: 500px) and (orientation: landscape) {
         .hero {
             padding: 100px 2rem 60px;
@@ -768,7 +750,6 @@
         }
     }
 
-    /* High DPI Screens */
     @media (-webkit-min-device-pixel-ratio: 2),
     (min-resolution: 192dpi) {
         .hero {
@@ -777,7 +758,6 @@
         }
     }
 
-    /* Print Styles */
     @media print {
 
         .header,
@@ -800,7 +780,6 @@
         }
     }
 
-    /* Menu toggle animation */
     .menu-toggle.active span:nth-child(1) {
         transform: rotate(-45deg) translate(-5px, 6px);
     }
@@ -813,7 +792,6 @@
         transform: rotate(45deg) translate(-5px, -6px);
     }
 
-    /* Modern Header Components */
     .modern-header {
         position: fixed;
         top: 0;

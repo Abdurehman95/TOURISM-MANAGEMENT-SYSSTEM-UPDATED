@@ -28,7 +28,6 @@ class AuthService
 
         $email = strtolower(trim((string) $input['email']));
 
-        // Reject duplicate email
         $exists = $this->db->prepare('SELECT user_id FROM Users WHERE email = :email LIMIT 1');
         $exists->execute(['email' => $email]);
         if ($exists->fetchColumn()) {
@@ -143,7 +142,7 @@ class AuthService
 
         if (isset($input['email']) && $input['email'] !== '') {
             $newEmail = strtolower(trim((string) $input['email']));
-            // Uniqueness check
+
             $stmt = $this->db->prepare("SELECT user_id FROM Users WHERE email = ? AND user_id != ?");
             $stmt->execute([$newEmail, $userId]);
             if ($stmt->fetchColumn()) {
@@ -165,7 +164,6 @@ class AuthService
             $setParts[] = 'password_hash = :password_hash';
             $params['password_hash'] = password_hash((string) $input['password'], PASSWORD_BCRYPT);
 
-            // Mark password as changed
             $setParts[] = 'password_changed = 1';
         }
 

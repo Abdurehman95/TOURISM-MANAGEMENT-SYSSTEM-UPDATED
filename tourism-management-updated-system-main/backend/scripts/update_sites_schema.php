@@ -1,8 +1,5 @@
 <?php
 
-// Ensures Sites table has all necessary columns for researcher inputs.
-// Run with: php backend/scripts/update_sites_schema.php
-
 declare(strict_types=1);
 
 use App\Config\Database;
@@ -12,10 +9,9 @@ require __DIR__ . '/../vendor/autoload.php';
 try {
     $pdo = Database::make();
     
-    // Check if Sites table exists
     $stmt = $pdo->query("SHOW TABLES LIKE 'Sites'");
     if (!$stmt->fetchColumn()) {
-        // Create table if missing
+
         $sql = "CREATE TABLE Sites (
             site_id INT PRIMARY KEY AUTO_INCREMENT,
             site_name VARCHAR(200) NOT NULL,
@@ -43,7 +39,7 @@ try {
         $pdo->exec($sql);
         echo "Created Sites table.\n";
     } else {
-        // Add missing columns
+
         $columns = $pdo->query("SHOW COLUMNS FROM Sites")->fetchAll(PDO::FETCH_COLUMN);
         
         $adds = [];

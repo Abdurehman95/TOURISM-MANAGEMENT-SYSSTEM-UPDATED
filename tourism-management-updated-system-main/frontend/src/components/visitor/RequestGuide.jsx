@@ -22,7 +22,7 @@ export default function RequestGuide() {
 
   useEffect(() => {
     visitorService.getSiteById(siteId).then(setSite);
-    // Pre-fill user info if available
+
     const user = JSON.parse(localStorage.getItem('visitor_user'));
     if (user) {
       setFormData(prev => ({
@@ -56,9 +56,9 @@ export default function RequestGuide() {
       preferred_time: formData.time,
       number_of_visitors: formData.visitors,
       special_requirements: formData.specialReq,
-      // Use visit_price if available, otherwise price
+
       amount: site ? ((site.visit_price || site.price || 0) + (site.guide_fee || 0)) * formData.visitors : 0,
-      // Default guide type for now, or add a selector if needed
+
       guide_type_id: 1
     };
 

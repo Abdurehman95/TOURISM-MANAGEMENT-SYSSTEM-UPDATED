@@ -16,14 +16,14 @@ export default function GuideDashboard() {
     completed: 0
   });
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem('guide_user'));
+    const userData = JSON.parse(localStorage.getItem('user'));
     if (userData) {
       setUser(userData);
       guideService.getAssignedRequests(userData.user_id).then(requests => {
         const today = new Date().toISOString().split('T')[0];
         setStats({
-          pending: requests.filter(r => r.request_status === 'approved' || r.request_status === 'assigned').length,
-          today: requests.filter(r => r.preferred_date === today && r.request_status === 'accepted_by_guide').length,
+          pending: requests.filter(r => ['pending', 'approved', 'assigned'].includes(r.request_status)).length,
+          today: requests.filter(r => r.request_status === 'accepted_by_guide').length,
           completed: requests.filter(r => r.request_status === 'completed').length
         });
       });
@@ -53,9 +53,9 @@ export default function GuideDashboard() {
             <p style={{ margin: 0, color: 'var(--text-secondary)' }}>{t('dash_msg_waiting')}</p>
           </div>
           <div className="guide-card">
-            <h3 style={{ margin: '0 0 10px', color: '#1890ff' }}>{t('dash_todays_tours')}</h3>
+            <h3 style={{ margin: '0 0 10px', color: '#1890ff' }}>Scheduled Tours</h3>
             <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>{stats.today}</div>
-            <p style={{ margin: 0, color: 'var(--text-secondary)' }}>{t('dash_msg_scheduled')}</p>
+            <p style={{ margin: 0, color: 'var(--text-secondary)' }}>All upcoming tours</p>
           </div>
           <div className="guide-card">
             <h3 style={{ margin: '0 0 10px', color: '#52c41a' }}>{t('dash_completed')}</h3>

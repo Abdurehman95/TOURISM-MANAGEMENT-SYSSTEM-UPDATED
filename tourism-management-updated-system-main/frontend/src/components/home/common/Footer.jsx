@@ -18,7 +18,7 @@ function Footer() {
     <footer className="footer">
       <div className="footer-main">
         <div className="footer-container">
-          {/* Left Column - Brand & Social */}
+          {}
           <div className="footer-brand">
             <div className="footer-logo">
               <h2>Tourism MS</h2>
@@ -42,7 +42,7 @@ function Footer() {
             </div>
           </div>
 
-          {/* Middle Column - Newsletter */}
+          {}
           <div className="footer-newsletter">
             <h3>{t('footer_newsletter_title')}</h3>
             <p>{t('footer_newsletter_desc')}</p>
@@ -58,7 +58,7 @@ function Footer() {
             </form>
           </div>
 
-          {/* Right Column - Image */}
+          {}
           <div className="footer-image">
             <img
               src="https://media.licdn.com/dms/image/v2/C4D12AQE-m1-nr8-How/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1526892052518?e=2147483647&v=beta&t=92tghX60UuFdYT_PnK97ieedz2SLiA4cbW6SU84oemU"
@@ -68,7 +68,7 @@ function Footer() {
         </div>
       </div>
 
-      {/* Copyright Bar */}
+      {}
       <div className="footer-copyright">
         <p>© {new Date().getFullYear()} {t('footer_copyright')}</p>
       </div>

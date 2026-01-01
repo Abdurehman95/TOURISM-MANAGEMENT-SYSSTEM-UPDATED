@@ -1,4 +1,3 @@
-/* Dark Theme Chatbot Design - VisitEthiopia Style */
 .assistant-container {
   position: fixed;
   bottom: 20px;
@@ -15,7 +14,7 @@
   height: 600px;
   max-height: 80vh;
   background: #0f172a;
-  /* Very dark slate blue */
+  
   border-radius: 16px;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   display: flex;
@@ -38,7 +37,6 @@
   }
 }
 
-/* Header */
 .assistant-header {
   background: #1e293b;
   padding: 16px;
@@ -47,7 +45,7 @@
   justify-content: space-between;
   border-bottom: 3px solid transparent;
   border-image: linear-gradient(to right, #22c55e, #eab308, #ef4444) 1;
-  /* Ethio flag gradient strip */
+  
   position: relative;
   z-index: 10;
 }
@@ -116,7 +114,6 @@
   color: white;
 }
 
-/* Sub-Header / Info Bar */
 .info-bar {
   background: #020617;
   padding: 8px 16px;
@@ -134,12 +131,11 @@
   gap: 6px;
 }
 
-/* Messages Area */
 .assistant-messages {
   flex: 1;
   padding: 20px;
   background: #0f172a;
-  /* Dark bg */
+  
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -195,7 +191,6 @@
   }
 }
 
-/* Typing Indicator */
 .typing-wrapper {
   display: flex;
   gap: 4px;
@@ -234,7 +229,6 @@
   }
 }
 
-/* Quick Actions / Chips */
 .quick-actions-container {
   padding: 0 16px 12px;
   background: #0f172a;
@@ -272,7 +266,6 @@
   color: white;
 }
 
-/* Input Area - FIXED */
 .assistant-input-area {
   padding: 16px 20px 20px;
   background: #020617;
@@ -321,7 +314,6 @@
   font-weight: 400;
 }
 
-/* Send Button - FIXED */
 .send-btn {
   flex-shrink: 0;
   background: linear-gradient(135deg, #3b82f6, #2563eb);
@@ -361,7 +353,6 @@
   box-shadow: none;
 }
 
-/* Toggle Button */
 .assistant-toggle {
   width: 60px;
   height: 60px;

@@ -1,4 +1,3 @@
-// CommonJS-friendly server (no ESM/config needed). Uses dynamic import for node-fetch v3.
 const express = require('express');
 const fetch = (...args) => import('node-fetch').then(({ default: f }) => f(...args));
 require('dotenv').config();
@@ -11,7 +10,7 @@ app.post('/api/payments/chapa/create', async (req, res) => {
     if (!process.env.CHAPA_SECRET_KEY) {
       return res.status(500).send('Server missing CHAPA_SECRET_KEY env var');
     }
-    const payload = req.body; // amount, currency, email, first_name, last_name, tx_ref, return_url, callback_url, meta
+    const payload = req.body;
     const chapaRes = await fetch('https://api.chapa.co/v1/transaction/initialize', {
       method: 'POST',
       headers: {
@@ -43,7 +42,7 @@ app.get('/api/payments/chapa/verify/:txRef', async (req, res) => {
     if (!verifyRes.ok || data.status !== 'success') {
       return res.status(400).send(data.message || 'Verify failed');
     }
-    // TODO: mark payment confirmed in your datastore here
+
     res.json(data.data);
   } catch (err) {
     res.status(500).send(err.message || 'Server error');

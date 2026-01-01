@@ -26,8 +26,8 @@ export default function AdminUsers() {
   const onUserCreated = () => { refresh(); };
 
   const handleToggleStatus = async (user) => {
-    // eslint-disable-next-line no-restricted-globals
-    if (!confirm(t('msg_confirm_status'))) return;
+
+    if (!window.confirm(t('msg_confirm_status'))) return;
     try {
       await toggleUserStatus(user.user_id, !user.is_active);
       refresh();
@@ -37,8 +37,8 @@ export default function AdminUsers() {
   };
 
   const handleDelete = async (user) => {
-    // eslint-disable-next-line no-restricted-globals
-    if (!confirm(t('msg_confirm_delete'))) return;
+
+    if (!window.confirm(t('msg_confirm_delete'))) return;
     try {
       await deleteUser(user.user_id);
       refresh();
@@ -110,10 +110,7 @@ export default function AdminUsers() {
                             <div
                               className="action-menu-content"
                               onClick={(e) => e.stopPropagation()}
-                              /* Vertical positioning logic preserved via inline style if complex, but simple CSS helps. 
-                                 If clip issues occur, 'bottom: 100%' logic from orig file can be used dynamically, 
-                                 but standard absolute top:100% is usually fine for most rows. 
-                                 I'll keep the dynamic positioning logic in style prop just in case. */
+
                               style={{
                                 top: index >= users.length - 3 ? 'auto' : '100%',
                                 bottom: index >= users.length - 3 ? '100%' : 'auto'

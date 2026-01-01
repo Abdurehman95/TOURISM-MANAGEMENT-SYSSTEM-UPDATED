@@ -15,14 +15,10 @@ class StatsController
     $this->pdo = $pdo;
   }
 
-  /**
-   * Get system statistics
-   * Returns counts of sites, guides, and visitors
-   */
   public function getStats(): array
   {
     try {
-      // Count approved sites
+
       $sitesStmt = $this->pdo->prepare("
                 SELECT COUNT(*) as count 
                 FROM sites 
@@ -31,7 +27,6 @@ class StatsController
       $sitesStmt->execute();
       $sitesCount = (int) $sitesStmt->fetch(PDO::FETCH_ASSOC)['count'];
 
-      // Count active guides (site_agents)
       $guidesStmt = $this->pdo->prepare("
                 SELECT COUNT(*) as count 
                 FROM users 
@@ -40,7 +35,6 @@ class StatsController
       $guidesStmt->execute();
       $guidesCount = (int) $guidesStmt->fetch(PDO::FETCH_ASSOC)['count'];
 
-      // Count visitors
       $visitorsStmt = $this->pdo->prepare("
                 SELECT COUNT(*) as count 
                 FROM users 

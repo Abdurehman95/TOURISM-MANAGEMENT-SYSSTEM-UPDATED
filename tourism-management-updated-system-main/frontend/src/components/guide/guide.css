@@ -1,4 +1,3 @@
-/* Guide Module Styles */
 html,
 body {
   margin: 0;
@@ -184,7 +183,6 @@ body {
   color: var(--text-primary);
 }
 
-/* Table Styles */
 .guide-table {
   width: 100%;
   border-collapse: collapse;
@@ -212,7 +210,6 @@ body {
   background-color: var(--hover-bg);
 }
 
-/* Button Styles */
 .guide-btn {
   padding: 6px 12px;
   border: none;
@@ -241,12 +238,11 @@ body {
   background-color: #ff7875;
 }
 
-/* Update nav icon size for SVGs */
 .guide-sidebar nav a .nav-icon {
   width: 24px;
   height: 24px;
   font-size: 0;
-  /* Hide any text fallback */
+  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -257,8 +253,6 @@ body {
   height: 100%;
 }
 
-
-/* Collapsed Sidebar Styles */
 .guide-sidebar.collapsed nav a {
   justify-content: center;
   padding: 12px;
@@ -267,7 +261,7 @@ body {
 .guide-sidebar.collapsed nav a .nav-icon {
   margin-right: 0;
   width: 28px;
-  /* Slightly larger icons when collapsed */
+  
   height: 28px;
 }
 
@@ -284,13 +278,12 @@ body {
   margin-right: 0 !important;
 }
 
-/* Ensure logout button matches theme */
 .nav-logout {
   width: 100%;
   padding: 12px;
   border: none;
   background: var(--bg-primary);
-  /* Instead of hardcoded #fff1f0 */
+  
   color: #ff4d4f;
   border-radius: 8px;
   cursor: pointer;
@@ -308,7 +301,6 @@ body {
   border-color: #ff4d4f;
 }
 
-/* Dark theme specific overrides */
 [data-theme='dark'] .guide-table td {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -481,7 +473,6 @@ body {
   color: var(--text-secondary);
 }
 
-/* Table Styles */
 .guide-table {
   width: 100%;
   border-collapse: collapse;
@@ -509,7 +500,6 @@ body {
   background-color: var(--hover-bg);
 }
 
-/* Button Styles */
 .guide-btn {
   padding: 6px 12px;
   border: none;
@@ -548,13 +538,11 @@ body {
   color: #52c41a;
 }
 
-
-/* Update nav icon size for SVGs */
 .guide-sidebar nav a .nav-icon {
   width: 24px;
   height: 24px;
   font-size: 0;
-  /* Hide any text fallback */
+  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -565,8 +553,6 @@ body {
   height: 100%;
 }
 
-
-/* Collapsed Sidebar Styles */
 .guide-sidebar.collapsed nav a {
   justify-content: center;
   padding: 12px;
@@ -575,7 +561,7 @@ body {
 .guide-sidebar.collapsed nav a .nav-icon {
   margin-right: 0;
   width: 28px;
-  /* Slightly larger icons when collapsed */
+  
   height: 28px;
 }
 
@@ -592,7 +578,6 @@ body {
   margin-right: 0 !important;
 }
 
-/* Notification Dropdown Styles - Modern UI/UX */
 .notification-dropdown {
   position: absolute;
   top: calc(100% + 12px);
@@ -646,7 +631,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Custom Scrollbar */
 .notification-dropdown>ul::-webkit-scrollbar {
   width: 6px;
 }
@@ -819,7 +803,6 @@ body {
   transform: translateY(0);
 }
 
-/* Mark as Read Button */
 .btn-sm {
   padding: 4px 12px;
   font-size: 0.75rem;

@@ -1,7 +1,5 @@
 import { api } from '../../services/api';
 
-// Researcher flows now hit the real backend so data persists to MySQL.
-
 export const getResearcherSummary = async () => {
   const sites = await getResearcherSites();
   return {

@@ -38,7 +38,8 @@ export default function AdminSites() {
   };
 
   const getResearcherName = (site) => {
-    if (site.researcher) return site.researcher; // Legacy
+    if (site.researcher_name) return site.researcher_name;
+    if (site.researcher) return site.researcher;
     if (site.researcher_id) {
       const user = users.find(u => u.user_id === site.researcher_id);
       return user ? `${user.first_name} ${user.last_name}` : t('lbl_unknown');
@@ -47,8 +48,8 @@ export default function AdminSites() {
   };
 
   const handleDelete = async (id) => {
-    // eslint-disable-next-line no-restricted-globals
-    if (!confirm(t('msg_confirm_site_delete'))) return;
+
+    if (!window.confirm(t('msg_confirm_site_delete'))) return;
     try {
       await deleteSite(id);
       refresh();

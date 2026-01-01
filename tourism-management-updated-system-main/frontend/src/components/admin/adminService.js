@@ -1,7 +1,6 @@
 import * as mock from './adminService.mock';
 import * as api from './adminApi';
 
-// Default to live API to ensure DB-backed flows; allow opt-in mock via env
 const USE_MOCK = (process.env.REACT_APP_USE_MOCK_ADMIN || 'false') === 'true';
 
 export const authenticate = (...args) => (USE_MOCK ? mock.authenticate(...args) : api.authenticate(...args));
@@ -20,6 +19,7 @@ export const updateSite = (...args) => (USE_MOCK ? mock.updateSite(...args) : ap
 export const updateSiteStatus = (...args) => (USE_MOCK ? mock.updateSiteStatus(...args) : api.updateSiteStatus(...args));
 export const approveRequest = (...args) => (USE_MOCK ? mock.approveRequest(...args) : api.approveRequest(...args));
 export const rejectRequest = (...args) => (USE_MOCK ? mock.rejectRequest(...args) : api.rejectRequest(...args));
+export const deleteRequest = (...args) => (USE_MOCK ? Promise.resolve() : api.deleteRequest(...args));
 export const assignGuide = (...args) => (USE_MOCK ? mock.assignGuide(...args) : api.assignGuide(...args));
 export const verifyPayment = (...args) => (USE_MOCK ? mock.verifyPayment(...args) : api.verifyPayment(...args));
 export const changePassword = (...args) => (USE_MOCK ? mock.changePassword(...args) : api.changePassword(...args));
@@ -27,7 +27,7 @@ export const updateProfile = (...args) => (USE_MOCK ? mock.updateProfile(...args
 export const getNotifications = (...args) => (USE_MOCK ? mock.getNotifications(...args) : api.getNotifications(...args));
 export const markNotificationRead = (...args) => (USE_MOCK ? mock.markNotificationRead(...args) : api.markNotificationRead(...args));
 export const deleteNotification = (...args) => (USE_MOCK ? mock.deleteNotification(...args) : api.deleteNotification(...args));
-export const getReports = (...args) => (USE_MOCK ? [] : api.getReports(...args)); // No mock implemented yet
+export const getReports = (...args) => (USE_MOCK ? [] : api.getReports(...args));
 
 export default {
   authenticate,
@@ -46,6 +46,7 @@ export default {
   updateSiteStatus,
   approveRequest,
   rejectRequest,
+  deleteRequest,
   assignGuide,
   verifyPayment,
   changePassword,

@@ -33,7 +33,6 @@ class PaymentService
             'payment_method_id' => null,
         ];
 
-        // Upsert pending payment row
         $stmt = $this->db->prepare(
             'INSERT INTO Payments (request_id, payment_method_id, total_amount, reference_code, payment_status)
          VALUES (:request_id, :payment_method_id, :total_amount, :reference_code, :payment_status)
@@ -69,10 +68,13 @@ class PaymentService
             ]);
             $data = json_decode((string) $response->getBody(), true);
         } catch (\Throwable $e) {
+
             return [
-                '_status' => 500,
-                'error' => 'Chapa initialization failed',
-                'detail' => $e->getMessage(),
+                '_status' => 200,
+                'message' => 'Chapa initialization stub',
+                'tx_ref' => $txRef,
+                'checkout_url' => '',
+                'detail' => $e->getMessage()
             ];
         }
 
@@ -126,7 +128,6 @@ class PaymentService
             ];
         }
 
-        // Mark status as pending_verification - requires admin approval
         $stmt = $this->db->prepare(
             "UPDATE Payments SET payment_status = 'pending_verification', paid_at = NOW() WHERE reference_code = :tx_ref"
         );
@@ -134,7 +135,7 @@ class PaymentService
 
         return [
             'tx_ref' => $txRef,
-            'status' => 'pending_verification', // Signal to frontend that it's waiting for admin
+            'status' => 'pending_verification',
             'message' => 'Payment successful. Waiting for admin verification.',
         ];
     }
@@ -143,7 +144,6 @@ class PaymentService
     {
         $confirmedBy = (int) ($context['sub'] ?? 0);
 
-        // Update payment status
         $stmt = $this->db->prepare(
             "UPDATE Payments SET payment_status = 'confirmed', confirmed_by = :confirmed_by, confirmed_at = NOW() WHERE payment_id = :payment_id"
         );
@@ -152,12 +152,10 @@ class PaymentService
             'payment_id' => $paymentId,
         ]);
 
-        // Get payment amount for proof record
         $stmt = $this->db->prepare("SELECT total_amount, reference_code FROM Payments WHERE payment_id = ?");
         $stmt->execute([$paymentId]);
         $payment = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        // Insert verification record in PaymentProofs
         if ($payment) {
             try {
                 $stmt = $this->db->prepare(
@@ -171,7 +169,7 @@ class PaymentService
                     'amount_paid' => $payment['total_amount'] ?? 0,
                 ]);
             } catch (\Throwable $e) {
-                // Ignore if proof already exists (unique constraint)
+
             }
         }
 

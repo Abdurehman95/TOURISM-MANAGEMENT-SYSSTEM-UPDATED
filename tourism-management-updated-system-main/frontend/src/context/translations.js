@@ -1,6 +1,6 @@
 export const translations = {
     en: {
-        // Header
+
         nav_home: "Home",
         nav_discover: "Discover",
         nav_about: "About",
@@ -8,12 +8,10 @@ export const translations = {
         nav_contact: "Contact",
         nav_signin: "Sign In",
 
-        // Hero
         hero_title: "Discover Historical Wonders",
         hero_subtitle: "Experience the rich cultural heritage and historical sites with our comprehensive tourism management system. Connect with expert site agents and explore ancient treasures.",
         hero_cta: "Start Your Journey",
 
-        // About
         about_badge: "About Us",
         about_title: "Your Gateway to Ethiopian Heritage",
         about_desc: "We connect travelers with Ethiopia's rich cultural heritage through verified historical sites, professional local guides, and seamless booking experiences.",
@@ -24,7 +22,6 @@ export const translations = {
         stats_guides: "Expert Guides",
         stats_visitors: "Happy Visitors",
 
-        // Features
         feat_badge: "Why Choose Us",
         feat_title: "Discover Our Features",
         feat_desc: "Everything you need to experience the rich history and culture of Ethiopia with confidence and ease.",
@@ -41,7 +38,6 @@ export const translations = {
         f_book_title: "Easy Booking",
         f_book_desc: "Seamless booking experience with real-time availability.",
 
-        // Destinations
         dest_badge: "Discover",
         dest_title: "Explore Ethiopia",
         dest_desc: "From ancient historical sites to breathtaking natural landscapes, discover the diverse regions of Ethiopia.",
@@ -64,7 +60,6 @@ export const translations = {
         dest_6_title: "Western Ethiopia – Renowned for Lush Nature and Coffee",
         dest_6_desc: "Visit the birthplace of coffee and explore the lush green landscapes of the west.",
 
-        // Contact
         contact_title: "Sends us a Message",
         contact_name_ph: "Name",
         contact_email_ph: "Email",
@@ -73,7 +68,6 @@ export const translations = {
         contact_success: "Thank you",
         contact_success_msg: "We'll get back to you soon.",
 
-        // Footer
         footer_desc: "Welcome to Ethiopia, the Land of Origins! Ethiopia invites you to discover why it is the origin of so much! As you explore this ancient land, you will be put in touch with your own origins... for this is the Land of Origins!",
         footer_newsletter_title: "Newsletter Subscribe",
         footer_newsletter_desc: "Sign up for our mailing list to get latest updates and offers.",
@@ -81,7 +75,6 @@ export const translations = {
         footer_copyright: "Powered By Tourism MS. All rights reserved",
         footer_email_ph: "Your Email",
 
-        // Login
         login_title: "Sign In",
         login_subtitle: "Welcome back! Please login to your account",
         login_email_ph: "Enter your email",
@@ -92,7 +85,6 @@ export const translations = {
         login_register_link: "Register here",
         back_home: "← Back to Home",
 
-        // Register
         register_title: "Create Account",
         register_subtitle: "Join our community of explorers",
         reg_fname_ph: "First Name",
@@ -102,13 +94,11 @@ export const translations = {
         register_login_text: "Already have an account?",
         register_login_link: "Login here",
 
-        // Forgot Password
         forgot_title: "Forgot Password",
         forgot_email_label: "Email Address",
         forgot_btn: "Send Reset Link",
         forgot_alert: "Reset link sent to:",
 
-        // Admin Dashboard
         admin_brand: "Tourism Admin",
         admin_dashboard: "Dashboard",
         admin_users: "Users",
@@ -119,14 +109,12 @@ export const translations = {
         admin_profile: "Profile",
         admin_logout: "Logout",
 
-        // Researcher Dashboard
         res_brand: "Researcher",
         res_dashboard: "Dashboard",
         res_sites: "My Sites",
         res_profile: "Profile",
         res_logout: "Logout",
 
-        // Guide Dashboard
         guide_brand: "Site Agent Panel",
         guide_dashboard: "Dashboard",
         guide_requests: "Requests",
@@ -135,7 +123,6 @@ export const translations = {
         guide_profile: "Profile",
         guide_logout: "Logout",
 
-        // Visitor Dashboard
         vis_brand: "Visitor Panel",
         vis_dashboard: "Dashboard",
         vis_explore: "Explore Sites",
@@ -144,7 +131,6 @@ export const translations = {
         vis_profile: "Profile",
         vis_logout: "Logout",
 
-        // Generic Dashboard
         dash_add_agent: "Add Site Agent",
         dash_add_researcher: "Add Researcher",
         dash_users: "Total Users",
@@ -173,7 +159,6 @@ export const translations = {
         dash_completed_visits: "Completed Visits",
         dash_view_history: "View History",
 
-        // Generic Table & Actions
         th_id: "ID",
         th_name: "Name",
         th_email: "Email",
@@ -203,7 +188,6 @@ export const translations = {
         btn_cancel: "Cancel",
         msg_create_fail: "Failed to create user",
 
-        // Sites
         th_site_name: "Site Name",
         lbl_site_name: "Site Name",
         th_researcher: "Researcher",
@@ -222,7 +206,6 @@ export const translations = {
         modal_site_details: "Site Details",
         lbl_unknown: "Unknown",
 
-        // Researcher Sites
         btn_add_new_site: "Add New Site",
         msg_no_sites: "No sites added yet.",
         msg_confirm_draft_delete: "Are you sure you want to delete this draft?",
@@ -243,7 +226,6 @@ export const translations = {
         ph_duration: "e.g. 2 hours",
         ph_comma_sep: "Comma separated",
 
-        // Requests & Payments
         admin_visitor_requests: "Visitor Requests",
         guide_assigned_requests: "Assigned Requests",
         th_visitor: "Visitor",
@@ -318,21 +300,7 @@ export const translations = {
         lbl_logout: "Log Out"
     },
     am: {
-        // ... (keeping existing translations)
-        // ... (keeping existing translations)
-        // ... (keeping existing translations)
-        // ... (keeping existing translations)
-        // ... (keeping existing translations)
-        // ... (keeping existing translations)
-        // ... (keeping existing translations)
-        // ... (keeping existing translations)
-        // ... (keeping existing translations)
-        // ... (keeping existing translations)
-        // ... (keeping existing translations)
-        // ... (keeping existing translations)
-        // ... (keeping existing translations)
-        // ... (keeping existing translation lines implicitly, just ensuring context for replacement)
-        // Header
+
         nav_home: "መነሻ",
         nav_discover: "አግኝ",
         nav_about: "ስለ እኛ",
@@ -340,12 +308,10 @@ export const translations = {
         nav_contact: "እውቂያ",
         nav_signin: "ግባ",
 
-        // Hero
         hero_title: "ታሪካዊ አስደናቂ ነገሮችን ያግኙ",
         hero_subtitle: "በአጠቃላይ የቱሪዝም አስተዳደር ስርዓታችን የበለፀገውን ባህላዊ ቅርስ እና ታሪካዊ ቦታዎችን ይለማመዱ። ከባለሙያ የጣቢያ ወኪሎች ጋር ይገናኙ እና ጥንታዊ ሀብቶችን ያስሱ።",
         hero_cta: "ጉዞዎን ይጀምሩ",
 
-        // About
         about_badge: "ስለ እኛ",
         about_title: "የኢትዮጵያ ቅርሶች መግቢያዎ",
         about_desc: "ተጓዦችን ከኢትዮጵያ የበለፀገ ባህላዊ ቅርስ ጋር በተረጋገጡ ታሪካዊ ቦታዎች፣ በባለሙያ የአካባቢ አስጎብኚዎች እና እንከን በሌለው የቦታ ማስያዝ ተሞክሮዎች እናገናኛለን።",
@@ -356,8 +322,6 @@ export const translations = {
         stats_guides: "ባለሙያ አስጎብኚዎች",
         stats_visitors: "ደስተኛ ጎብኚዎች",
 
-
-        // Features
         feat_badge: "ለምን እኛን ይምረጡ",
         feat_title: "ባህሪያቶቻችንን ያግኙ",
         feat_desc: "የኢትዮጵያን የበለፀገ ታሪክ እና ባህል በራስ መተማመን እና በቀላል ለመለማመድ የሚያስፈልገዎትን ሁሉ።",
@@ -374,7 +338,6 @@ export const translations = {
         f_book_title: "ቀላል ምዝገባ",
         f_book_desc: "በእውነተኛ ጊዜ ተገኝነት እና ፈጣን ማረጋገጫ ቀላል የቦታ ማስያዝ ተሞክሮ።",
 
-        // Destinations
         dest_badge: "አግኝ",
         dest_title: "ኢትዮጵያን ያስሱ",
         dest_desc: "ከጥንታዊ ታሪካዊ ቦታዎች እስከ አስደናቂ የተፈጥሮ መልክአ ምድሮች፣ የተለያዩ የኢትዮጵያ ክልሎችን ያስሱ።",
@@ -397,7 +360,6 @@ export const translations = {
         dest_6_title: "ምዕራብ ኢትዮጵያ - በለምለሙ ተፈጥሮ እና ቡና የታወቀች",
         dest_6_desc: "የቡና መገኛን ይጎብኙ እና የምዕራቡን ለምለም አረንጓዴ መልክአ ምድሮች ያስሱ።",
 
-        // Contact
         contact_title: "መልእክት ይላኩልን",
         contact_name_ph: "ስም",
         contact_email_ph: "ኢሜይል",
@@ -406,7 +368,6 @@ export const translations = {
         contact_success: "እናመሰግናለን",
         contact_success_msg: "በቅርቡ ምላሽ እንሰጣለን።",
 
-        // Footer
         footer_desc: "እንኳን ወደ ኢትዮጵያ በሰላም መጣችሁ፣ መነሻ ምድር! ኢትዮጵያ ለምን የብዙ ነገር መገኛ እንደሆነች እንድታውቁ ትጋብዛለች! ይህን ጥንታዊ ምድር ሲያስሱ፣ ከገዛ መነሻዎ ጋር ይገናኛሉ... ይህ የመነሻ ምድር ነውና!",
         footer_newsletter_title: "ለዜና መጽሔት ይመዝገቡ",
         footer_newsletter_desc: "የቅርብ ጊዜ ዝመናዎችን እና ቅናሾችን ለማግኘት ለደብዳቤ ዝርዝራችን ይመዝገቡ።",
@@ -414,7 +375,6 @@ export const translations = {
         footer_copyright: "በ Tourism MS የተጎላበተ። መብቱ በህግ የተጠበቀ ነው።",
         footer_email_ph: "የእርስዎ ኢሜይል",
 
-        // Login
         login_title: "ይግቡ",
         login_subtitle: "እንኳን ደህና መጡ! እባክዎ ወደ መለያዎ ይግቡ",
         login_email_ph: "ኢሜይልዎን ያስገቡ",
@@ -425,7 +385,6 @@ export const translations = {
         login_register_link: "እዚህ ይመዝገቡ",
         back_home: "← ወደ መነሻ ተመለስ",
 
-        // Register
         register_title: "መለያ ይፍጠሩ",
         register_subtitle: "የአሳሾች ማህበረሰባችንን ይቀላቀሉ",
         reg_fname_ph: "ስም",
@@ -435,13 +394,11 @@ export const translations = {
         register_login_text: "መለያ አለዎት?",
         register_login_link: "እዚህ ይግቡ",
 
-        // Forgot Password
         forgot_title: "የይለፍ ቃል ረሱ",
         forgot_email_label: "ኢሜይል አድራሻ",
         forgot_btn: "የዳግም ማስጀመሪያ አገናኝ ላክ",
         forgot_alert: "የዳግም ማስጀመሪያ አገናኝ ተልኳል ወደ:",
 
-        // Admin Dashboard
         admin_brand: "ቱሪዝም አስተዳደር",
         admin_dashboard: "ዳሽቦርድ",
         admin_users: "ተጠቃሚዎች",
@@ -452,14 +409,12 @@ export const translations = {
         admin_profile: "መገለጫ",
         admin_logout: "ውጣ",
 
-        // Researcher Dashboard
         res_brand: "ተመራማሪ",
         res_dashboard: "ዳሽቦርድ",
         res_sites: "የኔ ቦታዎች",
         res_profile: "መገለጫ",
         res_logout: "ውጣ",
 
-        // Guide Dashboard
         guide_brand: "የቦታ ወኪል ፓነል",
         guide_dashboard: "ዳሽቦርድ",
         guide_requests: "ጥያቄዎች",
@@ -468,7 +423,6 @@ export const translations = {
         guide_profile: "መገለጫ",
         guide_logout: "ውጣ",
 
-        // Visitor Dashboard
         vis_brand: "ጎብኚ ፓነል",
         vis_dashboard: "ዳሽቦርድ",
         vis_explore: "ቦታዎችን ያስሱ",
@@ -477,7 +431,6 @@ export const translations = {
         vis_profile: "መገለጫ",
         vis_logout: "ውጣ",
 
-        // Generic Dashboard
         dash_add_agent: "የቦታ ወኪል አክል",
         dash_add_researcher: "ተመራማሪ አክል",
         dash_users: "ጠቅላላ ተጠቃሚዎች",

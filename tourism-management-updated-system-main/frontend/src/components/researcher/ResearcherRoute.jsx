@@ -5,7 +5,7 @@ export default function ResearcherRoute({ children }) {
   const token = localStorage.getItem('researcher_token');
   const location = useLocation();
   if (!token) {
-    return <Navigate to="/login" replace />; // Redirect to main login or specific researcher login
+    return <Navigate to="/login" replace />;
   }
   return children;
 }

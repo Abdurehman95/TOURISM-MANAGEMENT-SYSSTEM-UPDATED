@@ -8,23 +8,28 @@ import { guideService } from '../../services/guideService';
 export default function GuideSchedule() {
   const { t } = useLanguage();
   const [schedule, setSchedule] = useState([]);
-  const [viewMode, setViewMode] = useState('list'); // 'list' or 'calendar'
+  const [viewMode, setViewMode] = useState('list');
   const [currentDate, setCurrentDate] = useState(new Date());
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
       guideService.getAssignedRequests(user.user_id).then(data => {
-        // Filter only accepted requests
-        const accepted = data.filter(r => r.request_status === 'accepted_by_guide');
-        // Sort by date
-        accepted.sort((a, b) => new Date(a.preferred_date) - new Date(b.preferred_date));
+
+        const accepted = data.filter(r => !['rejected', 'rejected_by_guide', 'cancelled'].includes(r.request_status));
+
+        accepted.sort((a, b) => {
+          const d1 = new Date(a.preferred_date);
+          const d2 = new Date(b.preferred_date);
+          if (isNaN(d1)) return 1;
+          if (isNaN(d2)) return -1;
+          return d1 - d2;
+        });
         setSchedule(accepted);
       });
     }
   }, []);
 
-  // Calendar helpers
   const getDaysInMonth = (date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
   };
@@ -38,12 +43,10 @@ export default function GuideSchedule() {
     const firstDay = getFirstDayOfMonth(currentDate);
     const days = [];
 
-    // Empty slots for previous month
     for (let i = 0; i < firstDay; i++) {
       days.push(<div key={`empty-${i}`} style={{ padding: '10px', background: '#f9f9f9' }}></div>);
     }
 
-    // Days of current month
     for (let i = 1; i <= daysInMonth; i++) {
       const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
       const toursOnDay = schedule.filter(s => s.preferred_date === dateStr);
@@ -127,7 +130,7 @@ export default function GuideSchedule() {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    borderLeft: '4px solid #1890ff'
+                    borderLeft: `4px solid ${item.request_status === 'approved' ? '#52c41a' : '#1890ff'}`
                   }}>
                     <div>
                       <h3 style={{ margin: '0 0 5px' }}>{item.site_name}</h3>
@@ -139,7 +142,10 @@ export default function GuideSchedule() {
                       </p>
                     </div>
                     <div>
-                      <span className="status-badge status-accepted_by_guide">{t('status_accepted')}</span>
+                      <span className={`status-badge status-${item.request_status}`}>
+                        {item.request_status === 'accepted_by_guide' ? t('status_accepted') :
+                          (item.request_status === 'approved' ? t('dash_approved') : item.request_status)}
+                      </span>
                     </div>
                   </div>
                 ))}

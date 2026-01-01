@@ -38,7 +38,6 @@ function LoginForm() {
 
         const userType = user.user_type ? user.user_type.toLowerCase().trim() : 'visitor';
 
-        // Store role-specific tokens for compatibility
         const token = localStorage.getItem('token');
         const setLocalData = () => {
           if (userType === 'admin') {
@@ -60,10 +59,9 @@ function LoginForm() {
           }
         };
 
-        // Show change password popup if first time, otherwise navigate
         if (user.password_changed === 0 || !user.password_changed) {
           if (window.confirm("Login successful! This is your first login. Would you like to change your password for security?")) {
-            setIsLoginSuccess(true); // Trigger popup view
+            setIsLoginSuccess(true);
             localStorage.setItem('temp_user', JSON.stringify(user));
             localStorage.setItem('temp_user_type', userType);
           } else {
@@ -101,11 +99,10 @@ function LoginForm() {
             }
 
             try {
-              // Use authService.changePassword which is already imported
+
               await authService.changePassword(newPass);
               alert("Password changed successfully!");
 
-              // Now navigate
               const userType = localStorage.getItem('temp_user_type');
               const user = JSON.parse(localStorage.getItem('temp_user'));
               const token = localStorage.getItem('token');
@@ -174,7 +171,7 @@ function LoginForm() {
 
   return (
     <div className="login-container" style={{ position: 'relative' }}>
-      {/* Theme Toggle inside the box */}
+      {}
       <div style={{ position: 'absolute', top: '15px', right: '15px', zIndex: 10 }}>
         <ThemeToggle />
       </div>

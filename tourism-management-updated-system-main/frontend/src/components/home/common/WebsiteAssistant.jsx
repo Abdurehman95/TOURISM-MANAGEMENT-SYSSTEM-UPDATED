@@ -20,7 +20,7 @@ const WebsiteAssistant = () => {
 
   const handleTopicClick = (topic) => {
     setInputValue(topic);
-    // Optional: could auto-submit, but pre-filling is safer
+
   };
 
   const scrollToBottom = () => {
@@ -31,7 +31,6 @@ const WebsiteAssistant = () => {
     scrollToBottom();
   }, [messages, isTyping]);
 
-  // Click outside to close
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (chatContainerRef.current && !chatContainerRef.current.contains(event.target)) {
@@ -77,27 +76,22 @@ const WebsiteAssistant = () => {
   const getResponse = (input) => {
     const lowerInput = input.toLowerCase();
 
-    // 1. General Greeting
     if (lowerInput.includes('hello') || lowerInput.includes('hi') || lowerInput.includes('selam')) {
       return "Selam! I'm here to help you plan your Ethiopian adventure. Try asking about 'Gondar', 'Lalibela', or 'local food'.";
     }
 
-    // 2. Food
     if (lowerInput.includes('food') || lowerInput.includes('injera') || lowerInput.includes('eat')) {
       return "Ethiopian cuisine is famous! You must try Injera with Doro Wat (spicy chicken stew). We also have amazing vegetarian dishes like Shiro and Misir Wat.";
     }
 
-    // 3. Culture
     if (lowerInput.includes('culture') || lowerInput.includes('festival') || lowerInput.includes('timket')) {
       return "Ethiopia has a rich cultural heritage. Key festivals include Timket (Epiphany) in Jan and Meskel in Sept. Coffee ceremonies are also a must-experience tradition!";
     }
 
-    // 4. Sites
     if (lowerInput.includes('site') || lowerInput.includes('place') || lowerInput.includes('visit') || lowerInput.includes('lalibela')) {
       return "Top destinations include the rock-hewn churches of Lalibela, the castles of Gondar, and the Simien Mountains. You can book guides for these sites here!";
     }
 
-    // 5. Booking/Login support (Keep existing logic)
     if (lowerInput.includes('login') || lowerInput.includes('sign in')) {
       return "To Log In: Click the 'Sign In' button at the top right. You need an account to book visits.";
     }
@@ -112,7 +106,7 @@ const WebsiteAssistant = () => {
     <div className="assistant-container" ref={chatContainerRef}>
       {isOpen && (
         <div className="assistant-window">
-          {/* Header */}
+          {}
           <div className="assistant-header">
             <div className="header-left">
               <div className="assistant-avatar-icon">
@@ -134,13 +128,13 @@ const WebsiteAssistant = () => {
             </button>
           </div>
 
-          {/* Info Bar */}
+          {}
           <div className="info-bar">
             <span>🇪🇹 Explore Ethiopia</span>
             <span>Travel • Culture • Food</span>
           </div>
 
-          {/* Messages */}
+          {}
           <div className="assistant-messages">
             {messages.map((msg) => (
               <div key={msg.id} className={`message ${msg.sender}`}>
@@ -161,7 +155,7 @@ const WebsiteAssistant = () => {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Suggestion Chips */}
+          {}
           <div className="quick-actions-container">
             <div className="quick-actions">
               {suggestedTopics.map((topic, idx) => (
@@ -176,7 +170,7 @@ const WebsiteAssistant = () => {
             </div>
           </div>
 
-          {/* Input Area */}
+          {}
           <form className="assistant-input-area" onSubmit={handleSend}>
             <div className="input-wrapper">
               <input

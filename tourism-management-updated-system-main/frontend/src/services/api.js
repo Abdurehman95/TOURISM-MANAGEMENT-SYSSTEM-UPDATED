@@ -1,5 +1,3 @@
-// Normalize API base: if env ends with /api use as-is, else append /api
-// Default to XAMPP path if not specified, or localhost:8000 if running php -S
 const rawBase = 'http://localhost:8000';
 const API_BASE_URL = `${rawBase}/api`;
 
@@ -13,7 +11,7 @@ const parseResponse = async (response) => {
 };
 
 const withAuthHeaders = () => {
-  // Prefer explicit tokens if stored under role-specific keys
+
   const token =
     localStorage.getItem('token') ||
     localStorage.getItem('researcher_token') ||

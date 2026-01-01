@@ -23,7 +23,7 @@ export default function AdminLogin() {
         localStorage.setItem('researcher_user', JSON.stringify(res.user));
         navigate('/researcher/dashboard');
       } else {
-        // Default to admin
+
         localStorage.setItem('admin_token', res.token);
         localStorage.setItem('admin_user', JSON.stringify(res.user));
         navigate('/admin/dashboard');

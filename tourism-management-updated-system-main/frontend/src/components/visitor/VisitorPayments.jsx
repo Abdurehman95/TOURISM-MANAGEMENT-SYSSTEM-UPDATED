@@ -6,7 +6,7 @@ import { paymentService } from '../../services/paymentService';
 import ThemeToggle from '../common/ThemeToggle';
 
 export default function VisitorPayments() {
-    const [activeTab, setActiveTab] = useState('pending'); // pending, history
+    const [activeTab, setActiveTab] = useState('pending');
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('chapa');
     const [showUploadModal, setShowUploadModal] = useState(false);
     const [selectedRequest, setSelectedRequest] = useState(null);
@@ -21,7 +21,6 @@ export default function VisitorPayments() {
     useEffect(() => {
         loadData();
 
-        // Handle Chapa return verification
         const urlParams = new URLSearchParams(window.location.search);
         const txRef = urlParams.get('tx_ref');
         if (txRef) {
@@ -31,7 +30,7 @@ export default function VisitorPayments() {
                 } else {
                     alert('Payment status: ' + (res.message || res.status));
                 }
-                // Clean up URL and refresh data
+
                 window.history.replaceState({}, document.title, window.location.pathname);
                 loadData();
             }).catch(err => {
@@ -50,8 +49,7 @@ export default function VisitorPayments() {
                 console.error("VisitorPayments: requests is not array", requests);
                 return;
             }
-            // Filter requests that are pending payment (or just created and not paid)
-            // For simplicity, let's say all requests need payment unless they have a confirmed payment
+
             visitorService.getMyPayments(user.user_id).then(payments => {
                 const safePayments = Array.isArray(payments) ? payments : [];
                 const completedRequestIds = safePayments
@@ -64,7 +62,7 @@ export default function VisitorPayments() {
                 setPaymentHistory(safePayments);
             }).catch(err => {
                 console.error("VisitorPayments error fetching payments:", err);
-                setPendingRequests(requests); // Assume all pending if payments fail?
+                setPendingRequests(requests);
                 setPaymentHistory([]);
             });
         }).catch(err => console.error("VisitorPayments error fetching requests:", err));
@@ -72,7 +70,7 @@ export default function VisitorPayments() {
 
     const handlePayClick = (request) => {
         setSelectedRequest(request);
-        setSelectedPaymentMethod('chapa'); // Default to Chapa so online flow is visible immediately
+        setSelectedPaymentMethod('chapa');
         setPaymentProofFile(null);
         setShowUploadModal(true);
     };
@@ -99,7 +97,7 @@ export default function VisitorPayments() {
                 email: user.email || 'guest@example.com',
                 first_name: user.first_name || 'Visitor',
                 last_name: user.last_name || 'User',
-                // Unique reference per payment
+
                 tx_ref: `tourism_${selectedRequest.request_id}_${Date.now()}`,
                 return_url: `${window.location.origin}/visitor/payments`,
                 callback_url: `${window.location.origin}/api/payments/chapa/callback`,
@@ -114,10 +112,9 @@ export default function VisitorPayments() {
             if (res?.checkout_url) {
                 window.location.href = res.checkout_url;
             } else if (res?.message === 'Chapa initialization stub') {
-                // Handle stub mode for testing without real Chapa keys
+
                 alert('Chapa Stub: Payment simulated. Check console/network.');
-                // In a real app, we'd redirect to the stub URL or handle success
-                // For now, let's just reload to show it might be pending
+
                 window.location.reload();
             } else {
                 alert('Could not start Chapa payment. Please try again or use another method.');
@@ -138,44 +135,11 @@ export default function VisitorPayments() {
         }
 
         const formData = new FormData();
-        formData.append('payment_id', selectedRequest.payment_id || 0); // We need a payment ID first? Or create one?
-        // Actually, for manual upload, we might need to create the payment record first or send request_id
-        // The backend uploadProof expects payment_id.
-        // Let's assume we need to create a pending payment first if it doesn't exist.
-        // But for now, let's send request_id and let backend handle or assume payment_id is known if we listed it.
-
-        // Wait, if it's a pending request, it might not have a payment record yet.
-        // We should probably create the payment record with status 'waiting' when uploading proof.
-        // But the backend uploadProof takes payment_id.
-
-        // Let's adjust to use a new endpoint or modify logic.
-        // For now, let's assume the user creates a payment record via 'createChapa' (which is generic create) 
-        // or we add a 'createManualPayment' endpoint.
-
-        // Simpler: Just use the visitorService.submitPayment which mocks it currently?
-        // No, we want real DB.
-
-        // Let's use a direct fetch to upload proof.
-        // But first we need a payment_id.
-        // If the request is pending, maybe we create a payment record on the fly?
-
-        // Let's change the flow:
-        // 1. Create Payment Record (Manual)
-        // 2. Upload Proof linked to that Payment ID
-
-        // For this iteration, let's just alert that manual upload needs backend support for creation.
-        // Or better, let's implement it properly.
+        formData.append('payment_id', selectedRequest.payment_id || 0);
 
         alert('Please use Chapa for now. Manual upload requires backend update.');
         return;
 
-        /*
-        visitorService.submitPayment(paymentData).then(() => {
-            alert('Payment proof uploaded successfully! Admin will verify.');
-            setShowUploadModal(false);
-            loadData(); // Refresh lists
-        });
-        */
     };
 
     return (
@@ -275,7 +239,7 @@ export default function VisitorPayments() {
                     )}
                 </div>
 
-                {/* Payment Modal */}
+                {}
                 {showUploadModal && (
                     <div className="admin-modal-backdrop">
                         <div className="admin-modal" style={{ maxWidth: '600px' }}>
@@ -332,7 +296,7 @@ export default function VisitorPayments() {
                     </div>
                 )}
 
-                {/* Receipt Modal - stays until user closes */}
+                {}
                 {showReceiptModal && receiptPayment && (
                     <div className="admin-modal-backdrop" style={{ zIndex: 10000 }}>
                         <div className="admin-modal" style={{ maxWidth: '520px' }}>

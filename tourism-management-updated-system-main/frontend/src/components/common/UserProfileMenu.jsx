@@ -42,7 +42,6 @@ export default function UserProfileMenu({ userType = 'visitor' }) {
             console.error('Error loading user data for menu', e);
         }
 
-        // Fallback if name is empty
         if (!name || name.trim() === '') name = userType.charAt(0).toUpperCase() + userType.slice(1);
 
         setUser({ name, image });
@@ -90,12 +89,12 @@ export default function UserProfileMenu({ userType = 'visitor' }) {
                     <hr className="nav-divider" />
                     <ul className="menu-items">
                         <li>
-                            <a href="#" onClick={(e) => { e.preventDefault(); /* Settings implementation */ setIsOpen(false); }}>
+                            <a href="#" onClick={(e) => { e.preventDefault();  setIsOpen(false); }}>
                                 <span className="icon">⚙️</span> {t('lbl_settings')}
                             </a>
                         </li>
                         <li>
-                            <a href="#" onClick={(e) => { e.preventDefault(); /* Help implementation */ setIsOpen(false); }}>
+                            <a href="#" onClick={(e) => { e.preventDefault();  setIsOpen(false); }}>
                                 <span className="icon">❓</span> {t('lbl_help')}
                             </a>
                         </li>

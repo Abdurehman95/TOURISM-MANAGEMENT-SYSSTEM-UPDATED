@@ -52,7 +52,7 @@ export default function GuideProfile() {
     if (success) {
       setMessage('Profile updated successfully!');
       setIsEditing(false);
-      // Update local storage to reflect changes immediately
+
       localStorage.setItem('guide_user', JSON.stringify(profile));
     } else {
       setMessage('Failed to update profile.');
@@ -158,7 +158,7 @@ export default function GuideProfile() {
                 name="email"
                 value={profile.email}
                 onChange={handleChange}
-                disabled={true} // Email usually not editable
+                disabled={true}
                 style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', background: '#f5f5f5' }}
               />
             </div>

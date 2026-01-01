@@ -52,7 +52,7 @@ function Features() {
       }}
     >
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        {/* Header */}
+        {}
         <div style={{ textAlign: 'center', marginBottom: '60px' }}>
           <span style={{
             color: 'var(--accent-primary)',
@@ -81,7 +81,7 @@ function Features() {
           </p>
         </div>
 
-        {/* Features Grid */}
+        {}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',

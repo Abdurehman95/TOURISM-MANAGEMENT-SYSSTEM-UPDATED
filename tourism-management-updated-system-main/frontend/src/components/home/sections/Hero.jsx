@@ -23,7 +23,7 @@ function Hero() {
         backgroundRepeat: 'no-repeat'
       }}
     >
-      {/* Overlay */}
+      {}
       <div style={{
         position: 'absolute',
         top: 0,
@@ -34,7 +34,7 @@ function Hero() {
         zIndex: 1
       }}></div>
 
-      {/* Content */}
+      {}
       <div style={{
         position: 'relative',
         zIndex: 2,

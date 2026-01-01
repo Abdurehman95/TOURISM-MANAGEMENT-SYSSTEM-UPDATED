@@ -16,7 +16,7 @@ export default function ResearcherProfile() {
         first_name: user.first_name,
         last_name: user.last_name,
         email: user.email,
-        image: user.image // Save image URL
+        image: user.image
       });
       localStorage.setItem('researcher_user', JSON.stringify(updated));
       setUser(updated);
@@ -29,8 +29,7 @@ export default function ResearcherProfile() {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Simulate upload by creating a local URL
-      // In a real app, you'd upload to server and get a URL back
+
       const imageUrl = URL.createObjectURL(file);
       setUser({ ...user, image: imageUrl });
     }
@@ -43,8 +42,7 @@ export default function ResearcherProfile() {
       return;
     }
     try {
-      // In a real app, we'd verify 'current' password on server. 
-      // Here we just call the service which updates it directly in mock data.
+
       await changePassword(user.user_id, passData.new);
       setMessage('Password changed successfully.');
       setPassData({ current: '', new: '', confirm: '' });

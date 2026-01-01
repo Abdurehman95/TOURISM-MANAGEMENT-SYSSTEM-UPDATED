@@ -44,7 +44,6 @@ export default function ManageSiteModal({ site, researcherId, onClose, onSaved }
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate price
     if (formData.price && parseFloat(formData.price) < 1) {
       alert(t('msg_price_minimum') || 'Price must be at least 1 ETB');
       return;

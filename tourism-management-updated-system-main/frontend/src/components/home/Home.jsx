@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'; // Recompile trigger
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Header from './common/Header';
 import Footer from './common/Footer';
@@ -9,7 +9,6 @@ import WebsiteAssistant from './common/WebsiteAssistant';
 import { useLanguage } from '../../context/LanguageContext';
 import { dataService } from '../../services/dataService';
 
-// Import Images
 import lalibelaImg from '../../assets/images/lalibela.jpg';
 import gonderImg from '../../assets/images/gonder.jpg';
 import simienImg from '../../assets/images/simien-mountains.jpg';
@@ -24,7 +23,6 @@ function Home() {
     visitors: 1000
   });
 
-  // Fetch real statistics on component mount
   useEffect(() => {
     const fetchStats = async () => {
       const realStats = await dataService.getStatsFromAPI();
@@ -37,7 +35,7 @@ function Home() {
     <div>
       <Header />
 
-      {/* Hero Section - Inlined */}
+      {}
       <section
         id="home"
         style={{
@@ -58,7 +56,7 @@ function Home() {
           backgroundAttachment: 'fixed'
         }}
       >
-        {/* Overlay */}
+        {}
         <div style={{
           position: 'absolute',
           top: 0,
@@ -69,7 +67,7 @@ function Home() {
           zIndex: 1
         }}></div>
 
-        {/* Content */}
+        {}
         <div style={{
           position: 'relative',
           zIndex: 2,
@@ -121,7 +119,7 @@ function Home() {
         </div>
       </section>
 
-      {/* About Section - Inlined */}
+      {}
       <section
         id="about"
         style={{
@@ -130,7 +128,7 @@ function Home() {
         }}
       >
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          {/* Section Header */}
+          {}
           <div style={{ textAlign: 'center', marginBottom: '60px' }}>
             <span style={{
               display: 'inline-block',
@@ -165,18 +163,18 @@ function Home() {
             </p>
           </div>
 
-          {/* Content Grid */}
+          {}
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
             gap: '50px',
             alignItems: 'center'
           }}>
-            {/* Image */}
-            {/* Infinite Scroll Image Slider */}
+            {}
+            {}
             <div className="slider">
               <div className="slide-track">
-                {/* 5 Unique Slides */}
+                {}
                 <div className="slide">
                   <img src={lalibelaImg} alt="Lalibela Rock-Hewn Churches" />
                 </div>
@@ -193,7 +191,7 @@ function Home() {
                   <img src={sofomerImg} alt="Sof Omar Caves" />
                 </div>
 
-                {/* 5 Duplicate Slides for Infinite Effect */}
+                {}
                 <div className="slide">
                   <img src={lalibelaImg} alt="Lalibela Rock-Hewn Churches" />
                 </div>
@@ -212,7 +210,7 @@ function Home() {
               </div>
             </div>
 
-            {/* Text Content */}
+            {}
             <div>
               <h3 style={{
                 fontSize: '1.6rem',
@@ -239,7 +237,7 @@ function Home() {
                 {t('about_card_desc2')}
               </p>
 
-              {/* Stats - Now using real data */}
+              {}
               <div style={{
                 display: 'flex',
                 gap: '40px',

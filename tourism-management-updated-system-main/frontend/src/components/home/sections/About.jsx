@@ -13,7 +13,7 @@ function About() {
       }}
     >
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        {/* Section Header */}
+        {}
         <div style={{ textAlign: 'center', marginBottom: '60px' }}>
           <span style={{
             display: 'inline-block',
@@ -48,14 +48,14 @@ function About() {
           </p>
         </div>
 
-        {/* Content Grid */}
+        {}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
           gap: '50px',
           alignItems: 'center'
         }}>
-          {/* Image */}
+          {}
           <div style={{
             borderRadius: '20px',
             overflow: 'hidden',
@@ -87,7 +87,7 @@ function About() {
             />
           </div>
 
-          {/* Text Content */}
+          {}
           <div>
             <h3 style={{
               fontSize: '1.6rem',
@@ -114,7 +114,7 @@ function About() {
               {t('about_card_desc2')}
             </p>
 
-            {/* Stats */}
+            {}
             <div style={{
               display: 'flex',
               gap: '40px',
@@ -126,7 +126,7 @@ function About() {
               <StatItem end={100} label={t('stats_guides')} suffix="+" />
               <StatItem end={1000} label={t('stats_visitors')} suffix="+" />
             </div>
-            {/* Countdown Timer */}
+            {}
             <CountdownTimer targetDate={new Date().getTime() + 7 * 24 * 60 * 60 * 1000} />
           </div>
         </div>
@@ -147,7 +147,7 @@ const StatItem = ({ end, label, suffix = "" }) => {
           setHasAnimated(true);
         }
       },
-      { threshold: 0.1 } // Trigger when 10% visible
+      { threshold: 0.1 }
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
@@ -157,14 +157,12 @@ const StatItem = ({ end, label, suffix = "" }) => {
     if (!hasAnimated) return;
 
     let startTimestamp = null;
-    const duration = 2000; // 2 seconds animation
+    const duration = 2000;
 
     const step = (timestamp) => {
       if (!startTimestamp) startTimestamp = timestamp;
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
 
-      // Easing function (easeOutQuad) for smoother effect
-      // t * (2 - t)
       const easeProgress = progress * (2 - progress);
 
       setCount(Math.floor(easeProgress * end));
@@ -172,7 +170,7 @@ const StatItem = ({ end, label, suffix = "" }) => {
       if (progress < 1) {
         window.requestAnimationFrame(step);
       } else {
-        setCount(end); // Ensure it lands exactly on end
+        setCount(end);
       }
     };
 

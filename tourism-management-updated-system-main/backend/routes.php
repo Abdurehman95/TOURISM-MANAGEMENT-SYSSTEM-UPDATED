@@ -44,13 +44,11 @@ $statsController = new StatsController($pdo);
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 
-// Normalize path for subfolder deployment (e.g. /tourism-new/backend/public/api/sites -> /api/sites)
 $apiPos = strpos($path, '/api/');
 if ($apiPos !== false) {
     $path = substr($path, $apiPos);
 }
 
-// Debug all requests
 file_put_contents(__DIR__ . '/request_debug.log', date('[Y-m-d H:i:s] ') . "$method $path\n", FILE_APPEND);
 
 $body = json_decode(file_get_contents('php://input'), true) ?? [];
@@ -92,7 +90,7 @@ switch (true) {
         break;
 
     case $method === 'POST' && $path === '/api/sites':
-        // Log incoming payload and auth header for diagnostics
+
         $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '(none)';
         file_put_contents(__DIR__ . '/debug_sites_store.log', date('[Y-m-d H:i:s] ') . "Auth: $authHeader\nBody: " . print_r($body, true) . "\n", FILE_APPEND);
 
@@ -122,11 +120,11 @@ switch (true) {
 
     case $method === 'GET' && $path === '/api/requests':
         $context = AuthMiddleware::requireToken();
-        // If visitor, use listForVisitor
+
         if (($context['role'] ?? '') === 'visitor') {
             $respond($requestsController->listForVisitor((int) $context['sub']));
         } else {
-            // Admin or Guide
+
             $respond($requestsController->listAll($context));
         }
         break;
@@ -148,6 +146,10 @@ switch (true) {
         $context = AuthMiddleware::requireToken();
         $status = (string) ($body['status'] ?? 'pending');
         $respond($requestsController->updateStatus((int) $matches[1], $status, $context));
+        break;
+
+    case $method === 'DELETE' && preg_match('#^/api/requests/(\d+)$#', $path, $matches):
+        $respond($requestsController->delete((int) $matches[1]));
         break;
 
     case $method === 'POST' && $path === '/api/payments/chapa/create':
@@ -181,7 +183,6 @@ switch (true) {
         $respond($statsController->getStats());
         break;
 
-    // --- Admin Users ---
     case $method === 'GET' && $path === '/api/admin/users':
         $respond($adminUsersController->list());
         break;
@@ -223,15 +224,13 @@ switch (true) {
         $respond($reviewsController->list($siteId));
         break;
 
-
     case $method === 'POST' && $path === '/api/reports':
         $context = AuthMiddleware::requireToken();
         $respond($reportsController->create($context, $body));
         break;
 
     case $method === 'GET' && $path === '/api/admin/reports':
-        // Ensure admin
-        // $context = AuthMiddleware::requireToken(); // Ideally check role
+
         $respond($reportsController->list());
         break;
 

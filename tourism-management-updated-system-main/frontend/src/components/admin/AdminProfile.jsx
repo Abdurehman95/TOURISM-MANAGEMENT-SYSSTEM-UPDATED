@@ -11,7 +11,6 @@ export default function AdminProfile() {
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
 
-  // Profile Form State
   const [profileData, setProfileData] = useState({
     firstName: '',
     lastName: '',
@@ -20,7 +19,6 @@ export default function AdminProfile() {
   });
   const [profileMessage, setProfileMessage] = useState({ type: '', text: '' });
 
-  // Password Form State
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
@@ -112,7 +110,7 @@ export default function AdminProfile() {
         </header>
 
         <div className="panel" style={{ maxWidth: '800px', margin: '0 auto' }}>
-          {/* Header */}
+          {}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid var(--border-color)', paddingBottom: '15px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
               <div style={{ width: 60, height: 60, borderRadius: '50%', background: 'var(--accent-primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', fontWeight: 'bold' }}>
@@ -130,7 +128,7 @@ export default function AdminProfile() {
             )}
           </div>
 
-          {/* Profile Form/View */}
+          {}
           {isEditing ? (
             <form onSubmit={submitProfile}>
               {profileMessage.text && (
@@ -165,7 +163,7 @@ export default function AdminProfile() {
                   name="username"
                   value={profileData.username}
                   onChange={handleProfileChange}
-                  disabled // Username usually not editable easily
+                  disabled
                 />
               </div>
               <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '15px' }}>
@@ -190,7 +188,7 @@ export default function AdminProfile() {
             </div>
           )}
 
-          {/* Security Section */}
+          {}
           <div style={{ marginTop: '30px', paddingTop: '20px', borderTop: '1px solid var(--border-color)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
               <h3 style={{ margin: 0, fontSize: '1.1rem' }}>{t('title_security')}</h3>

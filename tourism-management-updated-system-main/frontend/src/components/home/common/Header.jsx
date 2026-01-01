@@ -10,13 +10,11 @@ function Header() {
 
   const { language, changeLanguage, t } = useLanguage();
 
-  // Initialize dark mode from localStorage
   const [darkMode, setDarkMode] = useState(() => {
     const savedTheme = localStorage.getItem('theme');
     return savedTheme === 'dark';
   });
 
-  // Apply saved theme on component mount
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
@@ -24,14 +22,12 @@ function Header() {
     }
   }, []);
 
-  // Handle scroll events
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Toggle dark mode and save to localStorage
   const toggleDarkMode = () => {
     const newMode = !darkMode;
     setDarkMode(newMode);
@@ -45,12 +41,10 @@ function Header() {
     setLanguageDropdown(false);
   };
 
-  // Toggle mobile menu
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
-  // Close mobile menu when clicking a nav link
   const closeMobileMenu = () => {
     setMobileMenuOpen(false);
   };
@@ -72,7 +66,7 @@ function Header() {
         </nav>
 
         <div className="header-actions">
-          {/* Language Selector */}
+          {}
           <div className="language-selector">
             <button
               className="language-toggle"
@@ -105,7 +99,7 @@ function Header() {
           </button>
           <Link to="/login" className="btn-signin">{t('nav_signin')}</Link>
 
-          {/* Mobile Menu Toggle Button */}
+          {}
           <button
             className={`mobile-menu-toggle ${mobileMenuOpen ? 'active' : ''}`}
             onClick={toggleMobileMenu}
